@@ -43,6 +43,7 @@ namespace _Project.Scripts.UI.Core
             if (_state == State.Shown || _state == State.Disposed)
                 return;
 
+            Debug.Log($"[Window] Show: {GetType()}");
             _content.SetActive(true);
             OnShown();
         }
@@ -52,6 +53,7 @@ namespace _Project.Scripts.UI.Core
             if (_state == State.Hidden || _state == State.Disposed)
                 return;
 
+            Debug.Log($"[Window] Hide: {GetType()}");
             _content.SetActive(false);
             OnHidden();
         }

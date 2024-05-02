@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace _Project.Scripts.Game.Entities
+namespace _Project.Scripts.Game.Invaders
 {
     public class InvadersFleet
     {

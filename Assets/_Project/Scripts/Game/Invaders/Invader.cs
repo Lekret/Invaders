@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Game.Entities
+﻿namespace _Project.Scripts.Game.Invaders
 {
     public class Invader
     {

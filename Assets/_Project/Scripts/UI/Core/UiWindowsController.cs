@@ -6,16 +6,16 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Core
 {
-    public class WindowsController : IInitializable, IDisposable
+    public class UiWindowsController : IInitializable, IDisposable
     {
-        private readonly WindowsConfig _windowsConfig;
+        private readonly UiWindowsConfig _windowsConfig;
         private readonly IMessageBroker _messageBroker;
         private readonly IInstantiator _instantiator;
         private readonly CompositeDisposable _subscriptions = new();
         private readonly List<UiWindow> _windows = new();
 
-        public WindowsController(
-            WindowsConfig windowsConfig,
+        public UiWindowsController(
+            UiWindowsConfig windowsConfig,
             IMessageBroker messageBroker, 
             IInstantiator instantiator)
         {
@@ -33,9 +33,7 @@ namespace _Project.Scripts.UI.Core
                 _windows.Add(window);
             }
 
-            _messageBroker.Receive<ShowWindowEvent>().Subscribe(ShowWindow).AddTo(_subscriptions);
-            _messageBroker.Receive<HideWindowEvent>().Subscribe(HideWindow).AddTo(_subscriptions);
-            
+            _messageBroker.Receive<UiWindowEvent>().Subscribe(HandleWindowEvent).AddTo(_subscriptions);
             Debug.Log($"[WindowsController] Windows created: {_windows.Count}");
         }
 
@@ -51,7 +49,7 @@ namespace _Project.Scripts.UI.Core
             _windows.Clear();
         }
 
-        private void ShowWindow(ShowWindowEvent windowEvent)
+        private void HandleWindowEvent(UiWindowEvent windowEvent)
         {
             var window = FindWindow(windowEvent.WindowType);
             if (window == null)
@@ -59,23 +57,10 @@ namespace _Project.Scripts.UI.Core
                 Debug.LogError($"[WindowsController] Window not found: {windowEvent.WindowType}");
                 return;
             }
-            
-            windowEvent.BeforeShow?.Invoke(window);
-            window.Show();
-        }
 
-        private void HideWindow(HideWindowEvent windowEvent)
-        {
-            var window = FindWindow(windowEvent.WindowType);
-            if (window == null)
-            {
-                Debug.LogError($"[WindowsController] Window not found: {windowEvent.WindowType}");
-                return;
-            }
-            
-            window.Hide();
+            windowEvent.Action?.Invoke(window);
         }
-
+        
         private UiWindow FindWindow(Type type)
         {
             foreach (var window in _windows)

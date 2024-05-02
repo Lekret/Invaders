@@ -6,12 +6,12 @@ namespace _Project.Scripts.Infrastructure
 {
     public class UiInstaller : MonoInstaller
     {
-        [SerializeField] private WindowsConfig _windowsConfig;
+        [SerializeField] private UiWindowsConfig _windowsConfig;
 
         public override void InstallBindings()
         {
             Container.BindInstance(_windowsConfig).AsSingle();
-            Container.BindInterfacesTo<WindowsController>().AsSingle();
+            Container.BindInterfacesTo<UiWindowsController>().AsSingle();
         }
     }
 }

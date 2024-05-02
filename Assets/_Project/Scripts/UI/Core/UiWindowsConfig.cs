@@ -3,7 +3,7 @@
 namespace _Project.Scripts.UI.Core
 {
     [CreateAssetMenu(menuName = "Config/WindowsConfig")]
-    public class WindowsConfig : ScriptableObject
+    public class UiWindowsConfig : ScriptableObject
     {
         [SerializeField] private GameObject[] _windowPrefabs;
 
