@@ -12,7 +12,7 @@ namespace _Project.Scripts.Services
 
         public bool IsPaused => _pauseDemanders.Count > 0;
         
-        public IObservable<bool> ChangedAsObservable()
+        public IObservable<bool> PausedChangedAsObservable()
         {
             return _changedCommand;
         }

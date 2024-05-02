@@ -44,6 +44,7 @@ namespace _Project.Scripts.UI.Core
                 return;
 
             Debug.Log($"[Window] Show: {GetType()}");
+            _state = State.Shown;
             _content.SetActive(true);
             OnShown();
         }
@@ -54,6 +55,7 @@ namespace _Project.Scripts.UI.Core
                 return;
 
             Debug.Log($"[Window] Hide: {GetType()}");
+            _state = State.Hidden;
             _content.SetActive(false);
             OnHidden();
         }
