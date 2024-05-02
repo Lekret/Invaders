@@ -35,11 +35,20 @@ namespace _Project.Scripts.UI.Core
 
             _messageBroker.Receive<ShowWindowEvent>().Subscribe(ShowWindow).AddTo(_subscriptions);
             _messageBroker.Receive<HideWindowEvent>().Subscribe(HideWindow).AddTo(_subscriptions);
+            
+            Debug.Log($"[WindowsController] Windows created: {_windows.Count}");
         }
 
         void IDisposable.Dispose()
         {
             _subscriptions.Dispose();
+
+            foreach (var window in _windows)
+            {
+                window.Dispose();
+            }
+            
+            _windows.Clear();
         }
 
         private void ShowWindow(ShowWindowEvent windowEvent)
