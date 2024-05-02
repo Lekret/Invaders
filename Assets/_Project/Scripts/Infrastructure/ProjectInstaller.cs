@@ -1,4 +1,5 @@
 using _Project.Scripts.Services;
+using UniRx;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure
@@ -7,7 +8,8 @@ namespace _Project.Scripts.Infrastructure
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<SceneLoader>().AsSingle();
+            Container.Bind<SceneLoader>().AsSingle();
+            Container.BindInterfacesTo<IMessageBroker>().FromInstance(MessageBroker.Default).AsSingle();
         }
     }
 }
