@@ -6,8 +6,7 @@ namespace _Project.Scripts.Infrastructure
 {
     public class UiInstaller : MonoInstaller
     {
-        [SerializeField]
-        private WindowsConfig _windowsConfig;
+        [SerializeField] private WindowsConfig _windowsConfig;
 
         public override void InstallBindings()
         {

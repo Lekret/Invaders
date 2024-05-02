@@ -9,7 +9,7 @@ namespace _Project.Scripts.Infrastructure
         public override void InstallBindings()
         {
             Container.Bind<SceneLoader>().AsSingle();
-            Container.BindInterfacesTo<IMessageBroker>().FromInstance(MessageBroker.Default).AsSingle();
+            Container.BindInterfacesAndSelfTo<IMessageBroker>().FromInstance(MessageBroker.Default).AsSingle();
         }
     }
 }

@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a908cddff3849c3999d8e20af8c27e7, type: 3}
   m_Name: GameWindowsConfig
   m_EditorClassIdentifier: 
-  _windowPrefabs: []
+  _windowPrefabs:
+  - {fileID: 2895227494468304197, guid: 9fe69521126761844b087f9df840e4ba, type: 3}
+  - {fileID: 1046896751433319566, guid: d0c1228844a020a44ae1e4925ab845a9, type: 3}
