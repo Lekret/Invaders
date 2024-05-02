@@ -1,17 +1,13 @@
-using UnityEngine;
+using _Project.Scripts.Services;
+using Zenject;
 
 namespace _Project.Scripts.Infrastructure
 {
-    public class ProjectInstaller : MonoBehaviour
+    public class ProjectInstaller : MonoInstaller
     {
-        private void Start()
+        public override void InstallBindings()
         {
-        
-        }
-
-        private void Update()
-        {
-        
+            Container.BindInterfacesAndSelfTo<SceneLoader>().AsSingle();
         }
     }
 }
