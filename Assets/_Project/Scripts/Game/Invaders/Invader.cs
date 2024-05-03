@@ -2,6 +2,5 @@
 {
     public class Invader
     {
-        public int Health;
     }
 }

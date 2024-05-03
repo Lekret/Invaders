@@ -29,8 +29,12 @@ namespace _Project.Scripts.UI.Core
             foreach (var windowPrefab in _windowsConfig.WindowPrefabs)
             {
                 var window = _instantiator.InstantiatePrefabForComponent<UiWindow>(windowPrefab);
-                window.Init();
                 _windows.Add(window);
+            }
+
+            foreach (var window in _windows)
+            {
+                window.Init();
             }
 
             _messageBroker.Receive<UiWindowEvent>().Subscribe(HandleWindowEvent).AddTo(_subscriptions);

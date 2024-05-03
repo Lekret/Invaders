@@ -79,6 +79,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e605886df6e3bf5449872fe5744ab211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameConfig: {fileID: 11400000, guid: f6f6ab06caaa8ac40987583ddd10cf6c, type: 2}
+  _playerConfig: {fileID: 11400000, guid: bfd96cc0c4e78af46951dcb9000784d8, type: 2}
+  _invadersConfig: {fileID: 11400000, guid: 637746573b80af74893bc6fd381cc01b, type: 2}
 --- !u!114 &-5070624307152470889
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.UI.Core;
+﻿using _Project.Scripts.Events;
+using _Project.Scripts.UI.Core;
 using _Project.Scripts.UI.Utils;
 using UniRx;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace _Project.Scripts.UI
         [Inject] private IMessageBroker _messageBroker;
 
         [SerializeField] private Button _pauseButton;
+        [SerializeField] private TouchButton _attackButton;
         [SerializeField] private TouchButton _moveLeftButton;
         [SerializeField] private TouchButton _moveRightButton;
 
@@ -19,6 +21,11 @@ namespace _Project.Scripts.UI
 
         protected override void OnInit()
         {
+            _attackButton
+                .OnPointerDownAsObservable()
+                .Subscribe(_ => SendAttackEvent())
+                .AddTo(_subscriptions);
+            
             Observable
                 .Merge(
                     _moveLeftButton.OnPointerDownAsObservable().Select(_ => -1),
@@ -28,20 +35,28 @@ namespace _Project.Scripts.UI
                 .Scan(
                     seed: 0,
                     accumulator: (acc, x) => acc + x)
-                .Subscribe(HandleInput)
+                .Subscribe(x => SendMovementInput(x))
                 .AddTo(_subscriptions);
 
-            _pauseButton.OnClickAsObservable().Subscribe(_ => PauseGame()).AddTo(_subscriptions);
+            _pauseButton
+                .OnClickAsObservable()
+                .Subscribe(_ => PauseGame())
+                .AddTo(_subscriptions);
+        }
+
+        private void SendAttackEvent()
+        {
+            _messageBroker.Publish(new UiAttackInputEvent());
+        }
+
+        private void SendMovementInput(float delta)
+        {
+            _messageBroker.Publish(new UiMovementInputEvent(delta));
         }
 
         private void PauseGame()
         {
             _messageBroker.ShowWindow<PauseWindow>();
-        }
-
-        private void HandleInput(int input)
-        {
-            Debug.Log($"Input: {input}");
         }
 
         protected override void OnDisposed()
