@@ -1,20 +1,19 @@
-﻿using System;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Player.View
+namespace _Project.Scripts.Game.Projectiles.View
 {
-    public class ShipView : MonoBehaviour
+    public class BulletView : MonoBehaviour
     {
         private readonly CompositeDisposable _subscriptions = new();
         
-        public void Init(Ship ship)
+        public void Init(Bullet bullet)
         {
-            ship
+            bullet
                 .PositionAsObservable()
                 .Subscribe(x => transform.position = x)
                 .AddTo(_subscriptions);
-
+            
             _subscriptions.AddTo(this);
         }
     }

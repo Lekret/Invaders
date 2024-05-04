@@ -2,6 +2,7 @@
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Player.View;
+using _Project.Scripts.Game.Projectiles;
 using UniRx;
 using Zenject;
 
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Game
         private readonly GameConfig _gameConfig;
         private readonly PlayerConfig _playerConfig;
         private readonly InvadersConfig _invadersConfig;
+        private readonly BulletFactory _bulletFactory;
 
         public GameBuilder(
             IInstantiator instantiator,
@@ -49,8 +51,9 @@ namespace _Project.Scripts.Game
 
         private Ship CreateShip()
         {
-            //var shipView = _instantiator.InstantiatePrefabForComponent<IShipView>(_playerConfig.ShipViewPrefab);
-            var ship = new Ship(null);
+            var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
+            var ship = new Ship(_bulletFactory);
+            shipView.Init(ship);
             return ship;
         }
 

@@ -1,29 +1,34 @@
-﻿using _Project.Scripts.Game.Core;
-using _Project.Scripts.Game.Player.View;
+﻿using System;
+using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Projectiles;
+using UniRx;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
     public class Ship : IUpdatable, IStartable, IInputListener
     {
-        private readonly IShipView _shipView;
-        private bool _inputWantsAttack;
-        private float _inputMovementDelta;
+        private readonly BulletFactory _bulletFactory;
+        private readonly Vector3ReactiveProperty _position = new();
+        private bool _wantsAttack;
+        private float _movementDelta;
         private float _attackCooldown;
-
-        public Ship(IShipView shipView)
+        
+        public Ship(BulletFactory bulletFactory)
         {
-            _shipView = shipView;
+            _bulletFactory = bulletFactory;
         }
+
+        public IObservable<Vector3> PositionAsObservable() => _position;
 
         void IInputListener.SetWantsAttack()
         {
-            _inputWantsAttack = true;
+            _wantsAttack = true;
         }
 
         void IInputListener.SetMovementDelta(float movementDelta)
         {
-            _inputMovementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
+            _movementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
         }
 
         void IStartable.OnStart()
@@ -33,7 +38,7 @@ namespace _Project.Scripts.Game.Player
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            Move(_inputMovementDelta, deltaTime);
+            Move(_movementDelta, deltaTime);
             UpdateAttackCooldown(deltaTime);
             
             if (CanAttack())
@@ -47,9 +52,9 @@ namespace _Project.Scripts.Game.Player
 
         private void Move(float movementDelta, float deltaTime)
         {
-            var position = _shipView.Position;
+            var position = _position.Value;
             position.x += movementDelta * deltaTime;
-            _shipView.Position += position;
+            _position.Value = position;
         }
 
         private void UpdateAttackCooldown(float deltaTime)
@@ -60,12 +65,12 @@ namespace _Project.Scripts.Game.Player
 
         private bool CanAttack()
         {
-            return _inputWantsAttack && _attackCooldown <= 0f;
+            return _wantsAttack && _attackCooldown <= 0f;
         }
 
         private void ResetWantsAttack()
         {
-            _inputWantsAttack = false;
+            _wantsAttack = false;
         }
 
         private void ResetAttackCooldown()
@@ -76,6 +81,9 @@ namespace _Project.Scripts.Game.Player
         private void Attack()
         {
             Debug.Log("Attack");
+            var bullet = _bulletFactory.CreateBullet();
+            bullet.SetPosition(_position.Value);
+            bullet.SetMoveDirection(Vector3.up);
         }
     }
 }

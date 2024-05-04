@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Projectiles.View;
 using UnityEngine;
 
 namespace _Project.Scripts.Game
@@ -6,8 +7,8 @@ namespace _Project.Scripts.Game
     [CreateAssetMenu(menuName = "Config/GameConfig")]
     public class GameConfig : ScriptableObject
     {
-        [SerializeField] private BulletView _bulletPrefab;
+        [SerializeField] private BulletView _bulletViewPrefab;
         
-        public BulletView BulletPrefab => _bulletPrefab;
+        public BulletView BulletViewPrefab => _bulletViewPrefab;
     }
 }

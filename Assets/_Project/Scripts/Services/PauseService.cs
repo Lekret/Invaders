@@ -8,14 +8,11 @@ namespace _Project.Scripts.Services
     public class PauseService
     {
         private readonly HashSet<object> _pauseDemanders = new();
-        private readonly ReactiveCommand<bool> _changedCommand = new();
+        private readonly ReactiveCommand<bool> _pauseChangedCommand = new();
 
         public bool IsPaused => _pauseDemanders.Count > 0;
         
-        public IObservable<bool> PausedChangedAsObservable()
-        {
-            return _changedCommand;
-        }
+        public IObservable<bool> PausedChangedAsObservable() => _pauseChangedCommand;
 
         public void AddPauseDemander(object obj)
         {
@@ -32,7 +29,7 @@ namespace _Project.Scripts.Services
         private void DispatchChanged()
         {
             Debug.Log($"[PauseService] Pause changed: {IsPaused}");
-            _changedCommand.Execute(IsPaused);
+            _pauseChangedCommand.Execute(IsPaused);
         }
     }
 }

@@ -45,21 +45,32 @@ namespace _Project.Scripts.Game.Player
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            var kbInput = Input.GetAxisRaw("Horizontal");
-            var totalMovementDelta = kbInput + _uiInputDelta;
-            totalMovementDelta = Mathf.Clamp(totalMovementDelta, -1f, 1f);
-            _uiInputDelta = 0f;
-
-            var wantsAttack = _uiWantsAttack || Input.GetKeyDown(KeyCode.Space);
-            _uiWantsAttack = false;
+            var movementDelta = ReadMovementDelta();
+            var wantsAttack = ReadWantsAttack();
 
             if (_inputListener != null)
             {
-                _inputListener.SetMovementDelta(totalMovementDelta);
+                _inputListener.SetMovementDelta(movementDelta);
                 
                 if (wantsAttack)
                     _inputListener.SetWantsAttack();
             }
+        }
+
+        private float ReadMovementDelta()
+        {
+            var kbInput = Input.GetAxisRaw("Horizontal");
+            var movementDelta = kbInput + _uiInputDelta;
+            movementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
+            _uiInputDelta = 0f;
+            return movementDelta;
+        }
+
+        private bool ReadWantsAttack()
+        {
+            var wantsAttack = _uiWantsAttack || Input.GetKeyDown(KeyCode.Space);
+            _uiWantsAttack = false;
+            return wantsAttack;
         }
     }
 }

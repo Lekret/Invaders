@@ -2,19 +2,19 @@
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Player.View
+namespace _Project.Scripts.Game.Invaders.View
 {
-    public class ShipView : MonoBehaviour
+    public class InvaderView : MonoBehaviour
     {
         private readonly CompositeDisposable _subscriptions = new();
         
-        public void Init(Ship ship)
+        public void Init(Invader invader)
         {
-            ship
+            invader
                 .PositionAsObservable()
                 .Subscribe(x => transform.position = x)
                 .AddTo(_subscriptions);
-
+            
             _subscriptions.AddTo(this);
         }
     }
