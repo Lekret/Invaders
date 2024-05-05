@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
-    public class Ship : IUpdatable, IStartable, IInputListener
+    public class Ship : IAwakeable, IUpdatable, IInputListener
     {
         private readonly BulletFactory _bulletFactory;
         private readonly Vector3ReactiveProperty _position = new();
-        private bool _wantsAttack;
-        private float _movementDelta;
+        private bool _wantsAttackInput;
+        private float _movementDeltaInput;
         private float _attackCooldown;
         
         public Ship(BulletFactory bulletFactory)
@@ -21,24 +21,24 @@ namespace _Project.Scripts.Game.Player
 
         public IObservable<Vector3> PositionAsObservable() => _position;
 
-        void IInputListener.SetWantsAttack()
+        void IAwakeable.OnAwake()
         {
-            _wantsAttack = true;
+            // TODO Place to start position
+        }
+        
+        void IInputListener.OnAttackInput()
+        {
+            _wantsAttackInput = true;
         }
 
-        void IInputListener.SetMovementDelta(float movementDelta)
+        void IInputListener.SetMovementDeltaInput(float movementDelta)
         {
-            _movementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
-        }
-
-        void IStartable.OnStart()
-        {
-            // TODO Place to starting position
+            _movementDeltaInput = Mathf.Clamp(movementDelta, -1f, 1f);
         }
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            Move(_movementDelta, deltaTime);
+            Move(_movementDeltaInput, deltaTime);
             UpdateAttackCooldown(deltaTime);
             
             if (CanAttack())
@@ -65,12 +65,12 @@ namespace _Project.Scripts.Game.Player
 
         private bool CanAttack()
         {
-            return _wantsAttack && _attackCooldown <= 0f;
+            return _wantsAttackInput && _attackCooldown <= 0f;
         }
 
         private void ResetWantsAttack()
         {
-            _wantsAttack = false;
+            _wantsAttackInput = false;
         }
 
         private void ResetAttackCooldown()

@@ -10,12 +10,6 @@ namespace _Project.Scripts.Game
         public static void RegisterGameLoopDefaultOrder(this GameLoop gameLoop)
         {
             gameLoop
-                .ThenAwake<PlayerInput>();
-
-            gameLoop
-                .ThenStart<Ship>();
-            
-            gameLoop
                 .ThenUpdate<PlayerInput>()
                 .ThenUpdate<Ship>()
                 .ThenUpdate<InvadersFleet>()
@@ -23,9 +17,6 @@ namespace _Project.Scripts.Game
 
             gameLoop
                 .ThenFixedUpdate<Bullet>();
-
-            gameLoop
-                .ThenDispose<PlayerInput>();
 
 #if UNITY_EDITOR
             gameLoop.EditorValidateMissingDispatchTypes();

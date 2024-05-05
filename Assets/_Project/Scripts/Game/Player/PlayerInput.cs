@@ -3,7 +3,6 @@ using _Project.Scripts.Events;
 using _Project.Scripts.Game.Core;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace _Project.Scripts.Game.Player
 {
@@ -45,19 +44,19 @@ namespace _Project.Scripts.Game.Player
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            var movementDelta = ReadMovementDelta();
-            var wantsAttack = ReadWantsAttack();
+            var movementDelta = ReadMovementDeltaInput();
+            var wantsAttack = ReadWantsAttackInput();
 
             if (_inputListener != null)
             {
-                _inputListener.SetMovementDelta(movementDelta);
+                _inputListener.SetMovementDeltaInput(movementDelta);
                 
                 if (wantsAttack)
-                    _inputListener.SetWantsAttack();
+                    _inputListener.OnAttackInput();
             }
         }
 
-        private float ReadMovementDelta()
+        private float ReadMovementDeltaInput()
         {
             var kbInput = Input.GetAxisRaw("Horizontal");
             var movementDelta = kbInput + _uiInputDelta;
@@ -66,7 +65,7 @@ namespace _Project.Scripts.Game.Player
             return movementDelta;
         }
 
-        private bool ReadWantsAttack()
+        private bool ReadWantsAttackInput()
         {
             var wantsAttack = _uiWantsAttack || Input.GetKeyDown(KeyCode.Space);
             _uiWantsAttack = false;

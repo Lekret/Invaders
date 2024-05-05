@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Game.Projectiles.View;
+﻿using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Projectiles.View;
 using UnityEngine;
 using Zenject;
 
@@ -8,11 +9,13 @@ namespace _Project.Scripts.Game.Projectiles
     {
         private readonly GameConfig _gameConfig;
         private readonly IInstantiator _instantiator;
+        private readonly GameLoop _gameLoop;
 
-        public BulletFactory(GameConfig gameConfig, IInstantiator instantiator)
+        public BulletFactory(GameConfig gameConfig, IInstantiator instantiator, GameLoop gameLoop)
         {
             _gameConfig = gameConfig;
             _instantiator = instantiator;
+            _gameLoop = gameLoop;
         }
 
         public Bullet CreateBullet()

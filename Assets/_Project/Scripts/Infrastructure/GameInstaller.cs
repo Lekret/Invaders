@@ -1,4 +1,5 @@
 using _Project.Scripts.Game;
+using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles;
@@ -27,6 +28,8 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<PauseService>().AsSingle();
 
             Container.Bind<BulletFactory>().AsSingle();
+
+            Container.Bind<GameLoop>().AsSingle();
         }
     }
 }
