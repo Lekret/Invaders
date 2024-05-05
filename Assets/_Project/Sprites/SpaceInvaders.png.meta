@@ -220,13 +220,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_5
+      name: Invaders_Bullet_1
       rect:
         serializedVersion: 2
-        x: 51
-        y: 48
-        width: 39
-        height: 12
+        x: 38
+        y: 52
+        width: 3
+        height: 7
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_6
+      name: Ship
       rect:
         serializedVersion: 2
         x: 68
@@ -304,7 +304,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_9
+      name: Explosion_1
       rect:
         serializedVersion: 2
         x: 38
@@ -429,6 +429,90 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Invaders_Bullet_2
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 52
+        width: 3
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94948e0fc86dc9e428b80c94fe34a3af
+      internalID: 1607787348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Bullet
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 69
+        width: 1
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9ff18b71127c664e95dd5b0568d535b
+      internalID: 527137069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Explosion_2
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 19
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8abe73fe66315741a4f092402621a6c
+      internalID: -951103768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Explosion_3
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 2
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 694d26fb3d8fc6a4b941490259be65bc
+      internalID: 177943007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -440,6 +524,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Explosion_1: -2079557795
+      Explosion_2: -951103768
+      Explosion_3: 177943007
+      Invaders_Bullet_1: -1662773466
+      Invaders_Bullet_2: 308735889
+      Player_Bullet: 527137069
+      Ship: 36690905
       SpaceInvaders_0: -781349719
       SpaceInvaders_1: 768962469
       SpaceInvaders_10: -859605604
@@ -453,12 +544,8 @@ TextureImporter:
       SpaceInvaders_18: -1100244566
       SpaceInvaders_2: -362701601
       SpaceInvaders_3: 1712499092
-      SpaceInvaders_4: 308735889
-      SpaceInvaders_5: -1662773466
-      SpaceInvaders_6: 36690905
       SpaceInvaders_7: -381493256
       SpaceInvaders_8: 2068665708
-      SpaceInvaders_9: -2079557795
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -2,13 +2,12 @@
 using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
-using _Project.Scripts.Services;
 using UniRx;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
-    public class Ship : IUpdatable, IInputListener
+    public class Ship : IUpdatable, IDisposable, IInputListener
     {
         private readonly BulletFactory _bulletFactory;
         private readonly CameraProvider _cameraProvider;
@@ -17,6 +16,7 @@ namespace _Project.Scripts.Game.Player
         private bool _wantsAttackInput;
         private float _movementDeltaInput;
         private float _attackCooldown;
+        private float _currentAttackCooldown;
         private float _speed;
         
         public Ship(
@@ -37,9 +37,21 @@ namespace _Project.Scripts.Game.Player
             set => _position.Value = value;
         }
 
-        public void SetSpeed(float speed)
+        public float Speed
         {
-            _speed = speed;
+            get => _speed;
+            set => _speed = value;
+        }
+
+        public float AttackCooldown
+        {
+            get => _attackCooldown;
+            set => _attackCooldown = value;
+        }
+
+        public void Dispose()
+        {
+            _position.Dispose();
         }
         
         void IInputListener.OnAttackInput()
@@ -81,21 +93,26 @@ namespace _Project.Scripts.Game.Player
 
         private void UpdateAttackCooldown(float deltaTime)
         {
-            if (_attackCooldown > 0f)
-                _attackCooldown -= deltaTime;
+            if (_currentAttackCooldown > 0f)
+                _currentAttackCooldown -= deltaTime;
         }
 
         private void HandleAttackInput()
         {
-            if (_wantsAttackInput && _attackCooldown <= 0f)
+            if (_wantsAttackInput && _currentAttackCooldown <= 0f)
             {
-                _attackCooldown = 5f;
-                var bullet = _bulletFactory.CreateBullet();
+                _currentAttackCooldown = _attackCooldown;
+                var bullet = _bulletFactory.CreateBullet(BulletType.PlayerBullet);
+                bullet.Team = Team.Player;
                 bullet.Position = _position.Value;
-                bullet.SetMoveDirection(Vector3.up);
+                bullet.Velocity = Vector2.up * 5f;
             }
             
             _wantsAttackInput = false;
+        }
+
+        public void ApplyDamage()
+        {
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
+using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Player.View;
 using _Project.Scripts.Game.Projectiles;
@@ -22,12 +23,13 @@ namespace _Project.Scripts.Game
         private readonly CameraProvider _cameraProvider;
 
         public GameBuilder(
-            IInstantiator instantiator,
-            IMessageBroker messageBroker,
-            GameConfig gameConfig,
+            IInstantiator instantiator, 
+            IMessageBroker messageBroker, 
+            GameConfig gameConfig, 
             PlayerConfig playerConfig, 
-            InvadersConfig invadersConfig,
-            GameSceneData gameSceneData,
+            InvadersConfig invadersConfig, 
+            BulletFactory bulletFactory, 
+            GameSceneData gameSceneData, 
             CameraProvider cameraProvider)
         {
             _instantiator = instantiator;
@@ -35,6 +37,7 @@ namespace _Project.Scripts.Game
             _gameConfig = gameConfig;
             _playerConfig = playerConfig;
             _invadersConfig = invadersConfig;
+            _bulletFactory = bulletFactory;
             _gameSceneData = gameSceneData;
             _cameraProvider = cameraProvider;
         }
@@ -59,11 +62,14 @@ namespace _Project.Scripts.Game
 
         private Ship CreateShip()
         {
-            var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             var ship = new Ship(_bulletFactory, _cameraProvider, _gameConfig);
             ship.Position = _gameSceneData.ShipSpawnPosition;
-            ship.SetSpeed(_playerConfig.ShipSpeed);
+            ship.Speed = _playerConfig.ShipSpeed;
+            ship.AttackCooldown = _playerConfig.AttackCooldown;
+            
+            var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             shipView.Init(ship);
+            
             return ship;
         }
 
@@ -73,9 +79,22 @@ namespace _Project.Scripts.Game
             return invadersFleet;
         }
 
-        private Invader CreateInvader()
+        private Invader CreateInvader(GameLoop gameLoop)
         {
-            var invader = new Invader(); // TODO
+            var invader = new Invader();
+            var invaderView = _instantiator.InstantiatePrefabForComponent<InvaderView>(_invadersConfig.InvaderViewPrefab);
+            invaderView.Init(invader);
+            
+            invader
+                .DestroyedAsObservable()
+                .Subscribe(_ =>
+                {
+                    gameLoop.Remove(invader);
+                    invaderView.DestroySelf();
+                })
+                .AddTo(invader.Subscriptions);
+            
+            gameLoop.Add(invader);
             return invader;
         }
     }

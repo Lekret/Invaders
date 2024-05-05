@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Game.Player.View;
+using _Project.Scripts.Game.Projectiles.View;
+using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
@@ -6,11 +8,13 @@ namespace _Project.Scripts.Game.Player
     public class PlayerConfig : ScriptableObject
     {
         [SerializeField] private float _shipSpeed = 3f;
-        [SerializeField] private float _attackCooldown = 2f;
-        [SerializeField] private GameObject _shipViewPrefab;
+        [SerializeField] private float _attackCooldown = 1f;
+        [SerializeField] private ShipView _shipViewPrefab;
+        [SerializeField] private BulletView _bulletViewPrefab;
 
         public float ShipSpeed => _shipSpeed;
         public float AttackCooldown => _attackCooldown;
-        public GameObject ShipViewPrefab => _shipViewPrefab;
+        public ShipView ShipViewPrefab => _shipViewPrefab;
+        public BulletView BulletViewPrefab => _bulletViewPrefab;
     }
 }

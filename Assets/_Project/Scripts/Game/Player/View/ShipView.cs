@@ -7,9 +7,13 @@ namespace _Project.Scripts.Game.Player.View
     public class ShipView : MonoBehaviour
     {
         private readonly CompositeDisposable _subscriptions = new();
-        
+        private Ship _ship;
+
+        public Ship Ship => _ship;
+
         public void Init(Ship ship)
         {
+            _ship = ship;
             transform.position = ship.Position;
             ship
                 .PositionAsObservable()

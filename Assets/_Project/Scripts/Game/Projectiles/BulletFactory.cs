@@ -1,5 +1,9 @@
-﻿using _Project.Scripts.Game.Core;
+﻿using System;
+using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Invaders;
+using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles.View;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -7,27 +11,54 @@ namespace _Project.Scripts.Game.Projectiles
 {
     public class BulletFactory
     {
-        private readonly GameConfig _gameConfig;
-        private readonly IInstantiator _instantiator;
         private readonly GameLoop _gameLoop;
+        private readonly IInstantiator _instantiator;
+        private readonly PlayerConfig _playerConfig;
+        private readonly InvadersConfig _invadersConfig;
 
         public BulletFactory(
-            GameConfig gameConfig, 
-            IInstantiator instantiator, 
-            GameLoop gameLoop)
+            GameLoop gameLoop, 
+            IInstantiator instantiator,
+            PlayerConfig playerConfig,
+            InvadersConfig invadersConfig)
         {
-            _gameConfig = gameConfig;
-            _instantiator = instantiator;
             _gameLoop = gameLoop;
+            _instantiator = instantiator;
+            _playerConfig = playerConfig;
+            _invadersConfig = invadersConfig;
         }
 
-        public Bullet CreateBullet()
+        public Bullet CreateBullet(BulletType bulletType)
         {
-            var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(_gameConfig.BulletViewPrefab);
             var bullet = new Bullet();
+            
+            var bulletViewPrefab = GetBulletViewPrefab(bulletType);
+            var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(bulletViewPrefab);
             bulletView.Init(bullet);
+            bullet
+                .DestroyedAsObservable()
+                .Subscribe(_ =>
+                {
+                    _gameLoop.Remove(bullet);
+                    bulletView.DestroySelf();
+                })
+                .AddTo(bullet.Subscriptions);
+            
             _gameLoop.Add(bullet);
             return bullet;
+        }
+
+        private BulletView GetBulletViewPrefab(BulletType bulletType)
+        {
+            switch (bulletType)
+            {
+                case BulletType.PlayerBullet:
+                    return _playerConfig.BulletViewPrefab;
+                case BulletType.EnemyBullet:
+                    return _invadersConfig.BulletViewPrefab;
+                default:
+                    throw new Exception($"[BulletFactory] Bullet view not found: {bulletType}");
+            }
         }
     }
 }

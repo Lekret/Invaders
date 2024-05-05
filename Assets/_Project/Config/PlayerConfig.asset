@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ddca0cb84c48e9aa72453121c71508, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
-  _attackCooldown: 2
-  _shipViewPrefab: {fileID: 4975339857391770989, guid: db5a160ceb6d42446b376da63516b67c, type: 3}
+  _shipSpeed: 3
+  _attackCooldown: 1
+  _shipViewPrefab: {fileID: 1952470897710922668, guid: db5a160ceb6d42446b376da63516b67c, type: 3}
+  _bulletViewPrefab: {fileID: 2448256251855152609, guid: 5774fa5cbfbe2f4408f7e16fec50ed25, type: 3}

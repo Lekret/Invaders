@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506e481675ec43fe9d16c243f51a7790, type: 3}
   m_Name: InvadersConfig
   m_EditorClassIdentifier: 
+  _bulletViewPrefab: {fileID: 2448256251855152609, guid: 1d5e7d490855c9047a8e3e80ed44044e, type: 3}
