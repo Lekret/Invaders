@@ -7,6 +7,7 @@ using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
 using _Project.Scripts.Services;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Game
@@ -44,23 +45,21 @@ namespace _Project.Scripts.Game
 
         public void CreateGame(GameLoop gameLoop)
         {
-            var ship = CreateShip();
-            var playerInput = CreatePlayerInput();
+            var ship = CreateShip(gameLoop);
+            var playerInput = CreatePlayerInput(gameLoop);
             playerInput.SetInputListener(ship);
-            var invadersFleet = CreateInvadersFleet();
-
-            gameLoop.Add(ship);
-            gameLoop.Add(playerInput);
-            gameLoop.Add(invadersFleet);
+            CreateInvadersFleet(gameLoop);
         }
 
-        private PlayerInput CreatePlayerInput()
+        private PlayerInput CreatePlayerInput(GameLoop gameLoop)
         {
-            var playerInput = new PlayerInput(_messageBroker); // TODO
+            var playerInput = new PlayerInput(_messageBroker);
+            
+            gameLoop.Add(playerInput);
             return playerInput;
         }
 
-        private Ship CreateShip()
+        private Ship CreateShip(GameLoop gameLoop)
         {
             var ship = new Ship(_bulletFactory, _cameraProvider, _gameConfig);
             ship.Position = _gameSceneData.ShipSpawnPosition;
@@ -70,12 +69,33 @@ namespace _Project.Scripts.Game
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             shipView.Init(ship);
             
+            gameLoop.Add(ship);
             return ship;
         }
 
-        private InvadersFleet CreateInvadersFleet()
+        private InvadersFleet CreateInvadersFleet(GameLoop gameLoop)
         {
-            var invadersFleet = new InvadersFleet(); // TODO
+            var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
+            var invadersFleet = new InvadersFleet();
+
+            for (var x = 0; x < _invadersConfig.RowCount; x++)
+            {
+                for (var y = 0; y < _invadersConfig.ColumnCount; y++)
+                {
+                    var invader = CreateInvader(gameLoop);
+                    var horizontalViewportT = Mathf.Lerp(
+                        1f - _gameConfig.AvailableScreenArea,
+                        _gameConfig.AvailableScreenArea, 
+                        (float) x / _invadersConfig.RowCount);
+                    
+                    var invaderPosition = _cameraProvider.Camera.ViewportToWorldPoint(new Vector3(horizontalViewportT, 0f));
+                    invaderPosition.y = spawnPosition.y - y * _invadersConfig.VerticalSpacingBetweenEachInvader;
+                    invaderPosition.z = 0f;
+                    invader.Position = invaderPosition;
+                }
+            }
+
+            gameLoop.Add(invadersFleet);
             return invadersFleet;
         }
 

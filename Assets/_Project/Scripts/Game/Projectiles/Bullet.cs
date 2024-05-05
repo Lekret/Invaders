@@ -69,6 +69,7 @@ namespace _Project.Scripts.Game.Projectiles
                 return;
 
             ship.ApplyDamage();
+            Destroy();
         }
 
         public void OnHitWithInvader(Invader invader)
@@ -77,6 +78,7 @@ namespace _Project.Scripts.Game.Projectiles
                 return;
 
             invader.ApplyDamage();
+            Destroy();
         }
     }
 }

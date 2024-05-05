@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SpaceInvaders_0
+      name: Invader1_1
       rect:
         serializedVersion: 2
         x: 3
@@ -157,7 +157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_1
+      name: Invader2_1
       rect:
         serializedVersion: 2
         x: 4
@@ -178,7 +178,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_2
+      name: Invader1_2
       rect:
         serializedVersion: 2
         x: 19
@@ -199,7 +199,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_3
+      name: Invader2_2
       rect:
         serializedVersion: 2
         x: 20
@@ -262,7 +262,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_7
+      name: Invader3_1
       rect:
         serializedVersion: 2
         x: 4
@@ -283,7 +283,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_8
+      name: Invader3_2
       rect:
         serializedVersion: 2
         x: 19
@@ -346,7 +346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_11
+      name: Invader4_1
       rect:
         serializedVersion: 2
         x: 4
@@ -367,7 +367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_12
+      name: Invader4_2
       rect:
         serializedVersion: 2
         x: 20
@@ -388,7 +388,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_15
+      name: Invader5_1
       rect:
         serializedVersion: 2
         x: 4
@@ -409,7 +409,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpaceInvaders_16
+      name: Invader5_2
       rect:
         serializedVersion: 2
         x: 20
@@ -438,7 +438,7 @@ TextureImporter:
         width: 3
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -480,7 +480,7 @@ TextureImporter:
         width: 13
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -501,7 +501,7 @@ TextureImporter:
         width: 15
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -527,25 +527,25 @@ TextureImporter:
       Explosion_1: -2079557795
       Explosion_2: -951103768
       Explosion_3: 177943007
+      Invader1_1: -781349719
+      Invader1_2: -362701601
+      Invader2_1: 768962469
+      Invader2_2: 1712499092
+      Invader3_1: -381493256
+      Invader3_2: 2068665708
+      Invader4_1: 1149683508
+      Invader4_2: -555693614
+      Invader5_1: -992292719
+      Invader5_2: 1080003233
       Invaders_Bullet_1: -1662773466
       Invaders_Bullet_2: 308735889
       Player_Bullet: 527137069
       Ship: 36690905
-      SpaceInvaders_0: -781349719
-      SpaceInvaders_1: 768962469
       SpaceInvaders_10: -859605604
-      SpaceInvaders_11: 1149683508
-      SpaceInvaders_12: -555693614
       SpaceInvaders_13: 360979341
       SpaceInvaders_14: -647619912
-      SpaceInvaders_15: -992292719
-      SpaceInvaders_16: 1080003233
       SpaceInvaders_17: 116642972
       SpaceInvaders_18: -1100244566
-      SpaceInvaders_2: -362701601
-      SpaceInvaders_3: 1712499092
-      SpaceInvaders_7: -381493256
-      SpaceInvaders_8: 2068665708
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

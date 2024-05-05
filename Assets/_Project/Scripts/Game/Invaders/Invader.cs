@@ -11,8 +11,14 @@ namespace _Project.Scripts.Game.Invaders
         private readonly Vector3ReactiveProperty _position = new();
         private readonly ReactiveCommand _destroyedCommand = new();
 
-        public ICollection<IDisposable> Subscriptions => _subscriptions;
+        public Vector3 Position
+        {
+            get => _position.Value;
+            set => _position.Value = value;
+        }
         
+        public ICollection<IDisposable> Subscriptions => _subscriptions;
+
         public IObservable<Vector3> PositionAsObservable() => _position;
 
         public IObservable<Unit> DestroyedAsObservable() => _destroyedCommand;
