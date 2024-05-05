@@ -11,12 +11,14 @@ namespace _Project.Scripts.Infrastructure
 {
     public class GameInstaller : MonoInstaller
     {
+        [SerializeField] private GameSceneData _gameSceneData;
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private InvadersConfig _invadersConfig;
         
         public override void InstallBindings()
         {
+            Container.BindInstance(_gameSceneData).AsSingle();
             Container.BindInstance(_gameConfig).AsSingle();
             Container.BindInstance(_playerConfig).AsSingle();
             Container.BindInstance(_invadersConfig).AsSingle();
@@ -26,10 +28,10 @@ namespace _Project.Scripts.Infrastructure
 
             Container.Bind<GameBuilder>().AsSingle();
             Container.Bind<PauseService>().AsSingle();
-
+            
             Container.Bind<BulletFactory>().AsSingle();
 
-            Container.Bind<GameLoop>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
         }
     }
 }

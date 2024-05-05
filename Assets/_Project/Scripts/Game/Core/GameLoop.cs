@@ -32,7 +32,7 @@ namespace _Project.Scripts.Game.Core
             return this;
         }
 
-        public void AddItem<T>(T item)
+        public void Add<T>(T item)
         {
             if (item is IUpdatable updatable)
                 _updateLoop.AddItem(updatable);
@@ -47,7 +47,7 @@ namespace _Project.Scripts.Game.Core
                 awakeable.OnAwake();
         }
 
-        public void RemoveItem<T>(T item)
+        public void Remove<T>(T item)
         {
             if (item is IUpdatable updatable)
                 _updateLoop.RemoveItem(updatable);

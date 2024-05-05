@@ -9,7 +9,18 @@ namespace _Project.Scripts.Game.Projectiles
     {
         private readonly Vector3ReactiveProperty _position = new();
         private readonly Vector3ReactiveProperty _moveDirection = new();
-
+        
+        public Vector3 Position
+        {
+            get => _position.Value;
+            set => _position.Value = value;
+        }
+        
+        public void SetMoveDirection(Vector3 up)
+        {
+            _moveDirection.Value = up;
+        }
+        
         public IObservable<Vector3> PositionAsObservable() => _position;
         
         void IUpdatable.OnUpdate(float deltaTime)
@@ -20,16 +31,6 @@ namespace _Project.Scripts.Game.Projectiles
         void IFixedUpdatable.OnFixedUpdate(float deltaTime)
         {
             
-        }
-
-        public void SetPosition(Vector3 position)
-        {
-            _position.Value = position;
-        }
-
-        public void SetMoveDirection(Vector3 up)
-        {
-            _moveDirection.Value = up;
         }
     }
 }

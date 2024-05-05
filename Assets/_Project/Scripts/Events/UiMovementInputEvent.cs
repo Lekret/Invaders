@@ -1,4 +1,6 @@
-﻿namespace _Project.Scripts.Events
+﻿using UnityEngine;
+
+namespace _Project.Scripts.Events
 {
     public readonly struct UiMovementInputEvent
     {

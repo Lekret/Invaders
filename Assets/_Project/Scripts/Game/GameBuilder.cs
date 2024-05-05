@@ -16,19 +16,22 @@ namespace _Project.Scripts.Game
         private readonly PlayerConfig _playerConfig;
         private readonly InvadersConfig _invadersConfig;
         private readonly BulletFactory _bulletFactory;
+        private readonly GameSceneData _gameSceneData;
 
         public GameBuilder(
             IInstantiator instantiator,
             IMessageBroker messageBroker,
             GameConfig gameConfig,
             PlayerConfig playerConfig, 
-            InvadersConfig invadersConfig)
+            InvadersConfig invadersConfig,
+            GameSceneData gameSceneData)
         {
             _instantiator = instantiator;
             _messageBroker = messageBroker;
             _gameConfig = gameConfig;
             _playerConfig = playerConfig;
             _invadersConfig = invadersConfig;
+            _gameSceneData = gameSceneData;
         }
 
         public void CreateGame(GameLoop gameLoop)
@@ -38,9 +41,9 @@ namespace _Project.Scripts.Game
             playerInput.SetInputListener(ship);
             var invadersFleet = CreateInvadersFleet();
 
-            gameLoop.AddItem(ship);
-            gameLoop.AddItem(playerInput);
-            gameLoop.AddItem(invadersFleet);
+            gameLoop.Add(ship);
+            gameLoop.Add(playerInput);
+            gameLoop.Add(invadersFleet);
         }
 
         private PlayerInput CreatePlayerInput()
@@ -53,6 +56,7 @@ namespace _Project.Scripts.Game
         {
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             var ship = new Ship(_bulletFactory);
+            ship.Position = _gameSceneData.ShipSpawnPosition;
             shipView.Init(ship);
             return ship;
         }

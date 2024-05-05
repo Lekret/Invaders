@@ -9,6 +9,8 @@ namespace _Project.Scripts.Game.Projectiles.View
         
         public void Init(Bullet bullet)
         {
+            transform.position = bullet.Position;
+            
             bullet
                 .PositionAsObservable()
                 .Subscribe(x => transform.position = x)

@@ -10,6 +10,7 @@ namespace _Project.Scripts.Game.Player.View
         
         public void Init(Ship ship)
         {
+            transform.position = ship.Position;
             ship
                 .PositionAsObservable()
                 .Subscribe(x => transform.position = x)

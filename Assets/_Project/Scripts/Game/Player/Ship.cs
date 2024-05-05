@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
-    public class Ship : IAwakeable, IUpdatable, IInputListener
+    public class Ship : IUpdatable, IInputListener
     {
         private readonly BulletFactory _bulletFactory;
         private readonly Vector3ReactiveProperty _position = new();
@@ -21,11 +21,12 @@ namespace _Project.Scripts.Game.Player
 
         public IObservable<Vector3> PositionAsObservable() => _position;
 
-        void IAwakeable.OnAwake()
+        public Vector3 Position
         {
-            // TODO Place to start position
+            get => _position.Value;
+            set => _position.Value = value;
         }
-        
+
         void IInputListener.OnAttackInput()
         {
             _wantsAttackInput = true;
@@ -40,21 +41,20 @@ namespace _Project.Scripts.Game.Player
         {
             Move(_movementDeltaInput, deltaTime);
             UpdateAttackCooldown(deltaTime);
-            
-            if (CanAttack())
-            {
-                ResetAttackCooldown();
-                Attack();
-            }
-            
-            ResetWantsAttack();
+            HandleAttackInput();
         }
 
-        private void Move(float movementDelta, float deltaTime)
+        private void HandleAttackInput()
         {
-            var position = _position.Value;
-            position.x += movementDelta * deltaTime;
-            _position.Value = position;
+            if (_wantsAttackInput && _attackCooldown <= 0f)
+            {
+                _attackCooldown = 5f;
+                var bullet = _bulletFactory.CreateBullet();
+                bullet.Position = _position.Value;
+                bullet.SetMoveDirection(Vector3.up);
+            }
+            
+            _wantsAttackInput = false;
         }
 
         private void UpdateAttackCooldown(float deltaTime)
@@ -63,27 +63,11 @@ namespace _Project.Scripts.Game.Player
                 _attackCooldown -= deltaTime;
         }
 
-        private bool CanAttack()
+        private void Move(float movementDelta, float deltaTime)
         {
-            return _wantsAttackInput && _attackCooldown <= 0f;
-        }
-
-        private void ResetWantsAttack()
-        {
-            _wantsAttackInput = false;
-        }
-
-        private void ResetAttackCooldown()
-        {
-            _attackCooldown = 5f;
-        }
-
-        private void Attack()
-        {
-            Debug.Log("Attack");
-            var bullet = _bulletFactory.CreateBullet();
-            bullet.SetPosition(_position.Value);
-            bullet.SetMoveDirection(Vector3.up);
+            var position = _position.Value;
+            position.x += movementDelta * deltaTime;
+            _position.Value = position;
         }
     }
 }

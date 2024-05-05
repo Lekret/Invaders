@@ -61,7 +61,6 @@ namespace _Project.Scripts.Game.Player
             var kbInput = Input.GetAxisRaw("Horizontal");
             var movementDelta = kbInput + _uiInputDelta;
             movementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
-            _uiInputDelta = 0f;
             return movementDelta;
         }
 

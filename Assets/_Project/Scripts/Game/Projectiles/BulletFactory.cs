@@ -11,7 +11,10 @@ namespace _Project.Scripts.Game.Projectiles
         private readonly IInstantiator _instantiator;
         private readonly GameLoop _gameLoop;
 
-        public BulletFactory(GameConfig gameConfig, IInstantiator instantiator, GameLoop gameLoop)
+        public BulletFactory(
+            GameConfig gameConfig, 
+            IInstantiator instantiator, 
+            GameLoop gameLoop)
         {
             _gameConfig = gameConfig;
             _instantiator = instantiator;
@@ -23,6 +26,7 @@ namespace _Project.Scripts.Game.Projectiles
             var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(_gameConfig.BulletViewPrefab);
             var bullet = new Bullet();
             bulletView.Init(bullet);
+            _gameLoop.Add(bullet);
             return bullet;
         }
     }
