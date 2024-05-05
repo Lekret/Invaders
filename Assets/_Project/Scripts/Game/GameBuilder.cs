@@ -3,6 +3,8 @@ using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Player.View;
 using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Services;
+using _Project.Scripts.Services;
 using UniRx;
 using Zenject;
 
@@ -17,6 +19,7 @@ namespace _Project.Scripts.Game
         private readonly InvadersConfig _invadersConfig;
         private readonly BulletFactory _bulletFactory;
         private readonly GameSceneData _gameSceneData;
+        private readonly CameraProvider _cameraProvider;
 
         public GameBuilder(
             IInstantiator instantiator,
@@ -24,7 +27,8 @@ namespace _Project.Scripts.Game
             GameConfig gameConfig,
             PlayerConfig playerConfig, 
             InvadersConfig invadersConfig,
-            GameSceneData gameSceneData)
+            GameSceneData gameSceneData,
+            CameraProvider cameraProvider)
         {
             _instantiator = instantiator;
             _messageBroker = messageBroker;
@@ -32,6 +36,7 @@ namespace _Project.Scripts.Game
             _playerConfig = playerConfig;
             _invadersConfig = invadersConfig;
             _gameSceneData = gameSceneData;
+            _cameraProvider = cameraProvider;
         }
 
         public void CreateGame(GameLoop gameLoop)
@@ -55,8 +60,9 @@ namespace _Project.Scripts.Game
         private Ship CreateShip()
         {
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
-            var ship = new Ship(_bulletFactory);
+            var ship = new Ship(_bulletFactory, _cameraProvider, _gameConfig);
             ship.Position = _gameSceneData.ShipSpawnPosition;
+            ship.SetSpeed(_playerConfig.ShipSpeed);
             shipView.Init(ship);
             return ship;
         }

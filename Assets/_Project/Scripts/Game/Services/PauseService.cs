@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Services
+namespace _Project.Scripts.Game.Services
 {
     public class PauseService
     {

@@ -3,6 +3,7 @@ using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Services;
 using _Project.Scripts.Services;
 using UnityEngine;
 using Zenject;
@@ -28,6 +29,7 @@ namespace _Project.Scripts.Infrastructure
 
             Container.Bind<GameBuilder>().AsSingle();
             Container.Bind<PauseService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
             
             Container.Bind<BulletFactory>().AsSingle();
 
