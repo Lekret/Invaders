@@ -16,7 +16,7 @@ MonoBehaviour:
   _countInColumn: 5
   _spawnHorizontalSpacing: 0.8
   _spawnVerticalSpacing: 0.8
-  _minMovementInterval: 0.1
+  _minMovementInterval: 0.03
   _maxMovementInterval: 1
   _movementTicksToReachSide: 20
   _horizontalMovementPerTick: 0.1

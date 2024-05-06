@@ -43,8 +43,9 @@ namespace _Project.Scripts.Game.Projectiles
                     bulletView.DestroySelf();
                 })
                 .AddTo(bullet.Subscriptions);
-            
+
             _gameLoop.Add(bullet);
+            bullet.Init();
             return bullet;
         }
 

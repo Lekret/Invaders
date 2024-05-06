@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Projectiles
 {
-    public class Bullet : IAwakeable, IDisposable
+    public class Bullet : IDisposable
     {
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
@@ -42,7 +42,7 @@ namespace _Project.Scripts.Game.Projectiles
         
         public IObservable<Bullet> DestroyedAsObservable() => _destroyedCommand;
         
-        void IAwakeable.OnAwake()
+        public void Init()
         {
             Observable
                 .Timer(TimeSpan.FromSeconds(5f))

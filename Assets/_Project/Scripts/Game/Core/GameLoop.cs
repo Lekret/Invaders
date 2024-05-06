@@ -6,9 +6,10 @@ using Zenject;
 
 namespace _Project.Scripts.Game.Core
 {
-    public class GameLoop : IDisposable, ITickable, IFixedTickable
+    public class GameLoop : IDisposable, ITickable, ILateTickable, IFixedTickable
     {
         private readonly List<IDisposable> _disposables = new();
+        private readonly List<IDisposable> _toDisposeEndFrame = new();
         private readonly InnerGameLoop<IUpdatable> _updateLoop = new();
         private readonly InnerGameLoop<IFixedUpdatable> _fixedUpdateLoop = new();
 
@@ -41,10 +42,10 @@ namespace _Project.Scripts.Game.Core
                 _fixedUpdateLoop.AddItem(fixedUpdatable);
 
             if (item is IDisposable disposable)
+            {
+                _toDisposeEndFrame.Remove(disposable);
                 _disposables.Add(disposable);
-            
-            if (item is IAwakeable awakeable)
-                awakeable.OnAwake();
+            }
         }
 
         public void Remove<T>(T item)
@@ -58,7 +59,7 @@ namespace _Project.Scripts.Game.Core
             if (item is IDisposable disposable)
             {
                 _disposables.Remove(disposable);
-                disposable.Dispose();
+                _toDisposeEndFrame.Add(disposable);
             }
         }
         
@@ -94,14 +95,31 @@ namespace _Project.Scripts.Game.Core
             }
         }
 
+        void ILateTickable.LateTick()
+        {
+            DisposeMany(_toDisposeEndFrame);
+        }
+
         void IDisposable.Dispose()
         {
-            foreach (var item in _disposables.ToList())
+            DisposeMany(_disposables);
+        }
+
+        private static void DisposeMany(List<IDisposable> disposables)
+        {
+            if (disposables.Count == 0)
+                return;
+
+            var buffer = ListPool<IDisposable>.Instance.Spawn();
+            buffer.AddRange(disposables);
+            
+            foreach (var disposable in buffer)
             {
-                item.Dispose();
+                disposable.Dispose();
             }
             
-            _disposables.Clear();
+            disposables.Clear();
+            ListPool<IDisposable>.Instance.Despawn(buffer);
         }
     }
 }

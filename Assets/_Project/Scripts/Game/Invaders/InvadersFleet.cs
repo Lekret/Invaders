@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Invaders
 {
-    public class InvadersFleet : IAwakeable, IDisposable, IUpdatable
+    public class InvadersFleet : IDisposable, IUpdatable
     {
         private readonly CompositeDisposable _subscriptions = new();
         private readonly List<List<Invader>> _invadersRows = new();
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Game.Invaders
             _invadersRows[rowIndex].Add(invader);
         }
 
-        void IAwakeable.OnAwake()
+        public void Init()
         {
             _initialCount = CalcInvadersCount();
             _ticksUntilReachSide = Mathf.FloorToInt(_invadersConfig.MovementTicksToReachSide / 2f);
@@ -71,7 +71,7 @@ namespace _Project.Scripts.Game.Invaders
         private float CalculateNextMovementInterval()
         {
             var currentCount = CalcInvadersCount();
-            var currentToInitial = currentCount / _initialCount;
+            var currentToInitial = (float) currentCount / _initialCount;
             var movementInterval = Mathf.Lerp(
                 _invadersConfig.MinMovementInterval,
                 _invadersConfig.MaxMovementInterval,

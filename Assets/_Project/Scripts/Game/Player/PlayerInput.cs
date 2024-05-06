@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
 {
-    public class PlayerInput : IUpdatable, IAwakeable, IDisposable
+    public class PlayerInput : IUpdatable, IDisposable
     {
         private readonly CompositeDisposable _subscriptions = new();
         private readonly IMessageReceiver _messageReceiver;
@@ -24,7 +24,7 @@ namespace _Project.Scripts.Game.Player
             _inputListener = inputListener;
         }
 
-        void IAwakeable.OnAwake()
+        public void Init()
         {
             _messageReceiver
                 .Receive<UiAttackInputEvent>()

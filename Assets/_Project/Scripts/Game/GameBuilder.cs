@@ -54,8 +54,8 @@ namespace _Project.Scripts.Game
         private PlayerInput CreatePlayerInput(GameLoop gameLoop)
         {
             var playerInput = new PlayerInput(_messageBroker);
-            
             gameLoop.Add(playerInput);
+            playerInput.Init();
             return playerInput;
         }
 
@@ -98,6 +98,7 @@ namespace _Project.Scripts.Game
             }
 
             gameLoop.Add(invadersFleet);
+            invadersFleet.Init();
             return invadersFleet;
         }
 
