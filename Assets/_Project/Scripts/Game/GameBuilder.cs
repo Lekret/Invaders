@@ -76,22 +76,24 @@ namespace _Project.Scripts.Game
         private InvadersFleet CreateInvadersFleet(GameLoop gameLoop)
         {
             var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
-            var invadersFleet = new InvadersFleet();
-
+            var spawnOriginX = spawnPosition.x - _invadersConfig.RowCount / 2f * _invadersConfig.SpawnHorizontalSpacing;
+            var spawnOriginY = spawnPosition.y;
+            
+            var invadersFleet = new InvadersFleet(_invadersConfig);
+            
             for (var x = 0; x < _invadersConfig.RowCount; x++)
             {
                 for (var y = 0; y < _invadersConfig.ColumnCount; y++)
                 {
                     var invader = CreateInvader(gameLoop);
-                    var horizontalViewportT = Mathf.Lerp(
-                        1f - _gameConfig.AvailableScreenArea,
-                        _gameConfig.AvailableScreenArea, 
-                        (float) x / _invadersConfig.RowCount);
-                    
-                    var invaderPosition = _cameraProvider.Camera.ViewportToWorldPoint(new Vector3(horizontalViewportT, 0f));
-                    invaderPosition.y = spawnPosition.y - y * _invadersConfig.VerticalSpacingBetweenEachInvader;
-                    invaderPosition.z = 0f;
+                    var invaderPosition = new Vector3
+                    {
+                        x = spawnOriginX + x * _invadersConfig.SpawnHorizontalSpacing,
+                        y = spawnOriginY - y * _invadersConfig.SpawnVerticalSpacing,
+                        z = 0f
+                    };
                     invader.Position = invaderPosition;
+                    invadersFleet.AddInvader(invader);
                 }
             }
 
