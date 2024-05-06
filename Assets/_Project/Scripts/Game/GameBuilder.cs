@@ -1,4 +1,6 @@
-﻿using _Project.Scripts.Game.Core;
+﻿using System;
+using _Project.Scripts.Events;
+using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player;
@@ -24,13 +26,13 @@ namespace _Project.Scripts.Game
         private readonly CameraProvider _cameraProvider;
 
         public GameBuilder(
-            IInstantiator instantiator, 
-            IMessageBroker messageBroker, 
-            GameConfig gameConfig, 
-            PlayerConfig playerConfig, 
-            InvadersConfig invadersConfig, 
-            BulletFactory bulletFactory, 
-            GameSceneData gameSceneData, 
+            IInstantiator instantiator,
+            IMessageBroker messageBroker,
+            GameConfig gameConfig,
+            PlayerConfig playerConfig,
+            InvadersConfig invadersConfig,
+            BulletFactory bulletFactory,
+            GameSceneData gameSceneData,
             CameraProvider cameraProvider)
         {
             _instantiator = instantiator;
@@ -48,7 +50,24 @@ namespace _Project.Scripts.Game
             var ship = CreateShip(gameLoop);
             var playerInput = CreatePlayerInput(gameLoop);
             playerInput.SetInputListener(ship);
-            CreateInvadersFleet(gameLoop);
+            var invadersFleet = CreateInvadersFleet(gameLoop);
+
+            var gameOutcomeDisposable = Disposable.Empty;
+            gameOutcomeDisposable = Observable
+                .Merge(
+                    invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => true),
+                    invadersFleet.ReachedPlayerAsObservable().Select(_ => false),
+                    ship.DiedAsObservable().Select(_ => false))
+                .First()
+                .Subscribe(isWin =>
+                {
+                    if (isWin)
+                        _messageBroker.Publish(new WinEvent());
+                    else
+                        _messageBroker.Publish(new LoseEvent());
+                    
+                    gameOutcomeDisposable.Dispose();
+                });
         }
 
         private PlayerInput CreatePlayerInput(GameLoop gameLoop)
@@ -62,13 +81,13 @@ namespace _Project.Scripts.Game
         private Ship CreateShip(GameLoop gameLoop)
         {
             var ship = new Ship(_bulletFactory, _cameraProvider, _gameConfig);
+            ship.Health = _playerConfig.ShipHealth;
             ship.Position = _gameSceneData.ShipSpawnPosition;
             ship.Speed = _playerConfig.ShipSpeed;
             ship.AttackCooldown = _playerConfig.AttackCooldown;
-            
+
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             shipView.Init(ship);
-            
             gameLoop.Add(ship);
             return ship;
         }
@@ -78,9 +97,9 @@ namespace _Project.Scripts.Game
             var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
             var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
             var spawnOriginY = spawnPosition.y;
-            
+
             var invadersFleet = new InvadersFleet(_invadersConfig);
-            
+
             for (var x = 0; x < _invadersConfig.CountInRow; x++)
             {
                 for (var y = 0; y < _invadersConfig.CountInColumn; y++)
@@ -107,7 +126,7 @@ namespace _Project.Scripts.Game
             var invader = new Invader();
             var invaderView = _instantiator.InstantiatePrefabForComponent<InvaderView>(_invadersConfig.InvaderViewPrefab);
             invaderView.Init(invader);
-            
+
             invader
                 .DestroyedAsObservable()
                 .Subscribe(_ =>
@@ -116,7 +135,7 @@ namespace _Project.Scripts.Game
                     invaderView.DestroySelf();
                 })
                 .AddTo(invader.Subscriptions);
-            
+
             gameLoop.Add(invader);
             return invader;
         }

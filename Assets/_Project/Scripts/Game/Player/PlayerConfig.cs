@@ -7,11 +7,13 @@ namespace _Project.Scripts.Game.Player
     [CreateAssetMenu(menuName = "Config/PlayerConfig")]
     public class PlayerConfig : ScriptableObject
     {
+        [SerializeField] private int _shipHealth = 5;
         [SerializeField] private float _shipSpeed = 3f;
         [SerializeField] private float _attackCooldown = 1f;
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private BulletView _bulletViewPrefab;
 
+        public int ShipHealth => _shipHealth;
         public float ShipSpeed => _shipSpeed;
         public float AttackCooldown => _attackCooldown;
         public ShipView ShipViewPrefab => _shipViewPrefab;

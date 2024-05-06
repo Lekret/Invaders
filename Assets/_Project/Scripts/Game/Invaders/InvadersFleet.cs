@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Game.Core;
 using UniRx;
 using UnityEngine;
@@ -9,9 +10,12 @@ namespace _Project.Scripts.Game.Invaders
     public class InvadersFleet : IDisposable, IUpdatable
     {
         private readonly CompositeDisposable _subscriptions = new();
+        private readonly ReactiveCommand _allInvadersDestroyedCommand = new();
+        private readonly ReactiveCommand _reachedPlayerCommand = new();
         private readonly List<List<Invader>> _invadersRows = new();
         private readonly InvadersConfig _invadersConfig;
         private int _initialCount;
+        private int _currentCount;
         private float _timeUntilMovement;
         private int _ticksUntilReachSide;
         private int _direction = 1;
@@ -21,6 +25,10 @@ namespace _Project.Scripts.Game.Invaders
             _invadersConfig = invadersConfig;
         }
 
+        public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
+
+        public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
+
         public void AddInvader(Invader invader, int rowIndex)
         {
             var safeCounter = 0;
@@ -29,31 +37,41 @@ namespace _Project.Scripts.Game.Invaders
 
             _invadersRows[rowIndex].Add(invader);
         }
-
+        
         public void Init()
         {
-            _initialCount = CalcInvadersCount();
+            _initialCount = _invadersRows.Sum(x => x.Count);
+            _currentCount = _initialCount;
             _ticksUntilReachSide = Mathf.FloorToInt(_invadersConfig.MovementTicksToReachSide / 2f);
 
             for (var rowIndex = 0; rowIndex < _invadersRows.Count; rowIndex++)
             {
                 var row = _invadersRows[rowIndex];
                 var rowIndexCopy = rowIndex;
-                Action<Invader> onRowInvaderDestroyed = x => _invadersRows[rowIndexCopy].Remove(x);
 
                 foreach (var invader in row)
                 {
                     invader
                         .DestroyedAsObservable()
-                        .Subscribe(onRowInvaderDestroyed)
+                        .Subscribe(inv => OnInvaderDied(inv, rowIndexCopy))
                         .AddTo(_subscriptions);
                 }
             }
         }
-        
+
+        private void OnInvaderDied(Invader invader, int rowIndex)
+        {
+            var row = _invadersRows[rowIndex];
+            row.Remove(invader);
+            _currentCount--;
+            if (_currentCount <= 0)
+                _allInvadersDestroyedCommand.Execute();
+        }
+
         void IDisposable.Dispose()
         {
             _subscriptions.Dispose();
+            _allInvadersDestroyedCommand.Dispose();
         }
 
         void IUpdatable.OnUpdate(float deltaTime)
@@ -70,8 +88,7 @@ namespace _Project.Scripts.Game.Invaders
 
         private float CalculateNextMovementInterval()
         {
-            var currentCount = CalcInvadersCount();
-            var currentToInitial = (float) currentCount / _initialCount;
+            var currentToInitial = (float) _currentCount / _initialCount;
             var movementInterval = Mathf.Lerp(
                 _invadersConfig.MinMovementInterval,
                 _invadersConfig.MaxMovementInterval,
@@ -100,17 +117,6 @@ namespace _Project.Scripts.Game.Invaders
                 _ticksUntilReachSide = _invadersConfig.MovementTicksToReachSide;
                 _direction *= -1;
             }
-        }
-
-        private int CalcInvadersCount()
-        {
-            var sum = 0;
-            foreach (var row in _invadersRows)
-            {
-                sum += row.Count;
-            }
-
-            return sum;
         }
     }
 }

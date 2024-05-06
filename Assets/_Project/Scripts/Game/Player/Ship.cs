@@ -13,11 +13,13 @@ namespace _Project.Scripts.Game.Player
         private readonly CameraProvider _cameraProvider;
         private readonly GameConfig _gameConfig;
         private readonly Vector3ReactiveProperty _position = new();
+        private readonly ReactiveCommand<Ship> _diedCommand = new();
         private bool _wantsAttackInput;
         private float _movementDeltaInput;
         private float _attackCooldown;
         private float _currentAttackCooldown;
         private float _speed;
+        private int _health;
         
         public Ship(
             BulletFactory bulletFactory, 
@@ -31,6 +33,14 @@ namespace _Project.Scripts.Game.Player
 
         public IObservable<Vector3> PositionAsObservable() => _position;
 
+        public IObservable<Ship> DiedAsObservable() => _diedCommand;
+        
+        public int Health
+        {
+            get => _health;
+            set => _health = value;
+        }
+        
         public Vector3 Position
         {
             get => _position.Value;
@@ -113,6 +123,13 @@ namespace _Project.Scripts.Game.Player
 
         public void ApplyDamage()
         {
+            if (_health <= 0)
+                return;
+            
+            _health--;
+
+            if (_health <= 0)
+                _diedCommand.Execute(this);
         }
     }
 }
