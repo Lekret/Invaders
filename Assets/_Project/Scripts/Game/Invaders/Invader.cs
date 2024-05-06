@@ -9,7 +9,7 @@ namespace _Project.Scripts.Game.Invaders
     {
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
-        private readonly ReactiveCommand _destroyedCommand = new();
+        private readonly ReactiveCommand<Invader> _destroyedCommand = new();
 
         public Vector3 Position
         {
@@ -21,7 +21,7 @@ namespace _Project.Scripts.Game.Invaders
 
         public IObservable<Vector3> PositionAsObservable() => _position;
 
-        public IObservable<Unit> DestroyedAsObservable() => _destroyedCommand;
+        public IObservable<Invader> DestroyedAsObservable() => _destroyedCommand;
 
         void IDisposable.Dispose()
         {
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Game.Invaders
         
         public void ApplyDamage()
         {
-            _destroyedCommand.Execute();
+            _destroyedCommand.Execute(this);
         }
     }
 }

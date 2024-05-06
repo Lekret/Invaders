@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506e481675ec43fe9d16c243f51a7790, type: 3}
   m_Name: InvadersConfig
   m_EditorClassIdentifier: 
-  _rowCount: 11
-  _columnCount: 5
+  _countInRow: 11
+  _countInColumn: 5
   _spawnHorizontalSpacing: 0.8
   _spawnVerticalSpacing: 0.8
+  _minMovementInterval: 0.1
+  _maxMovementInterval: 1
+  _movementTicksToReachSide: 20
+  _horizontalMovementPerTick: 0.1
+  _verticalMovementPerReachSide: 0.5
   _invaderViewPrefab: {fileID: 6453431421973733806, guid: 3d0a8fa5eb0dcc141be5d14545d9a606, type: 3}
   _bulletViewPrefab: {fileID: 2448256251855152609, guid: 1d5e7d490855c9047a8e3e80ed44044e, type: 3}

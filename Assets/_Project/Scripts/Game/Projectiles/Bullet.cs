@@ -13,7 +13,7 @@ namespace _Project.Scripts.Game.Projectiles
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
         private readonly Vector2ReactiveProperty _velocity = new();
-        private readonly ReactiveCommand _destroyedCommand = new();
+        private readonly ReactiveCommand<Bullet> _destroyedCommand = new();
         private Team _team;
 
         public Team Team
@@ -40,7 +40,7 @@ namespace _Project.Scripts.Game.Projectiles
 
         public IObservable<Vector2> VelocityAsObservable() => _velocity;
         
-        public IObservable<Unit> DestroyedAsObservable() => _destroyedCommand;
+        public IObservable<Bullet> DestroyedAsObservable() => _destroyedCommand;
         
         void IAwakeable.OnAwake()
         {
@@ -60,7 +60,7 @@ namespace _Project.Scripts.Game.Projectiles
 
         private void Destroy()
         {
-            _destroyedCommand.Execute();
+            _destroyedCommand.Execute(this);
         }
 
         public void OnHitWithShip(Ship ship)

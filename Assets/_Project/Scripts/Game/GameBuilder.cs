@@ -76,14 +76,14 @@ namespace _Project.Scripts.Game
         private InvadersFleet CreateInvadersFleet(GameLoop gameLoop)
         {
             var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
-            var spawnOriginX = spawnPosition.x - _invadersConfig.RowCount / 2f * _invadersConfig.SpawnHorizontalSpacing;
+            var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
             var spawnOriginY = spawnPosition.y;
             
             var invadersFleet = new InvadersFleet(_invadersConfig);
             
-            for (var x = 0; x < _invadersConfig.RowCount; x++)
+            for (var x = 0; x < _invadersConfig.CountInRow; x++)
             {
-                for (var y = 0; y < _invadersConfig.ColumnCount; y++)
+                for (var y = 0; y < _invadersConfig.CountInColumn; y++)
                 {
                     var invader = CreateInvader(gameLoop);
                     var invaderPosition = new Vector3
@@ -93,7 +93,7 @@ namespace _Project.Scripts.Game
                         z = 0f
                     };
                     invader.Position = invaderPosition;
-                    invadersFleet.AddInvader(invader);
+                    invadersFleet.AddInvader(invader, rowIndex: y);
                 }
             }
 
