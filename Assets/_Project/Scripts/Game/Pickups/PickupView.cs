@@ -1,38 +1,36 @@
-﻿using System;
-using _Project.Scripts.Game.Invaders.View;
-using _Project.Scripts.Game.Player.View;
+﻿using _Project.Scripts.Game.Player.View;
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Projectiles.View
+namespace _Project.Scripts.Game.Pickups
 {
-    public class BulletView : MonoBehaviour
+    public class PickupView : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rigidbody2d;
         
         private readonly CompositeDisposable _subscriptions = new();
-        private Bullet _bullet;
+        private Pickup _pickup;
         
-        public void Init(Bullet bullet)
+        public void Init(Pickup pickup)
         {
-            _bullet = bullet;
-            transform.position = bullet.Position;
-            _rigidbody2d.velocity = bullet.Velocity;
+            _pickup = pickup;
+            transform.position = pickup.Position;
+            _rigidbody2d.velocity = pickup.Velocity;
             
-            bullet
+            pickup
                 .PositionAsObservable()
                 .Subscribe(x => transform.position = x)
                 .AddTo(_subscriptions);
 
-            bullet
+            pickup
                 .VelocityAsObservable()
                 .Subscribe(x => _rigidbody2d.velocity = x)
                 .AddTo(_subscriptions);
-            
-            bullet
+
+            pickup
                 .DestroyedAsObservable()
                 .Subscribe(_ => DestroySelf())
-                .AddTo(bullet.Subscriptions);
+                .AddTo(_subscriptions);
             
             _subscriptions.AddTo(this);
         }
@@ -41,11 +39,7 @@ namespace _Project.Scripts.Game.Projectiles.View
         {
             if (other.gameObject.TryGetComponent(out ShipView shipView))
             {
-                _bullet.OnHitWithShip(shipView.Ship);
-            }
-            else if (other.gameObject.TryGetComponent(out InvaderView invaderView))
-            {
-                _bullet.OnHitWithInvader(invaderView.Invader);
+                _pickup.OnHitWithShip(shipView.Ship);
             }
         }
 

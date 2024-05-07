@@ -76,11 +76,7 @@ namespace _Project.Scripts.Game.Invaders
 
             invader
                 .DestroyedAsObservable()
-                .Subscribe(_ =>
-                {
-                    _gameLoop.Remove(invader);
-                    invaderView.DestroySelf();
-                })
+                .Subscribe(_ => _gameLoop.Remove(invader))
                 .AddTo(invader.Subscriptions);
 
             _gameLoop.Add(invader);

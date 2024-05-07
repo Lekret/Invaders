@@ -28,37 +28,39 @@ namespace _Project.Scripts.Game.Projectiles
             _invadersConfig = invadersConfig;
         }
 
-        public Bullet CreateBullet(BulletType bulletType)
+        public Bullet CreateBullet(Vector3 position, Team team)
         {
             var bullet = new Bullet();
-            var bulletViewPrefab = GetBulletViewPrefab(bulletType);
-            var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(bulletViewPrefab);
+            bullet.Position = position;
+            BulletView viewPrefab;
+            
+            switch (team)
+            {
+                case Team.Player:
+                    viewPrefab = _playerConfig.BulletViewPrefab;
+                    bullet.Team = Team.Player;
+                    bullet.Velocity = Vector2.up * 5f;
+                    break;
+                case Team.Invaders:
+                    viewPrefab = _invadersConfig.BulletViewPrefab;
+                    bullet.Team = Team.Invaders;
+                    bullet.Velocity = Vector2.down * 5f;
+                    break;
+                default:
+                    Debug.LogError(team);
+                    return null;
+            }
+            
+            var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(viewPrefab);
             bulletView.Init(bullet);
             bullet
                 .DestroyedAsObservable()
-                .Subscribe(_ =>
-                {
-                    _gameLoop.Remove(bullet);
-                    bulletView.DestroySelf();
-                })
+                .Subscribe(_ => _gameLoop.Remove(bullet))
                 .AddTo(bullet.Subscriptions);
 
             _gameLoop.Add(bullet);
             bullet.Init();
             return bullet;
-        }
-
-        private BulletView GetBulletViewPrefab(BulletType bulletType)
-        {
-            switch (bulletType)
-            {
-                case BulletType.PlayerBullet:
-                    return _playerConfig.BulletViewPrefab;
-                case BulletType.InvaderBullet:
-                    return _invadersConfig.BulletViewPrefab;
-                default:
-                    throw new Exception($"[BulletFactory] Bullet view not found: {bulletType}");
-            }
         }
     }
 }

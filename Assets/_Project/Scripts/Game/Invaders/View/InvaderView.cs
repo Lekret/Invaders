@@ -32,6 +32,11 @@ namespace _Project.Scripts.Game.Invaders.View
                 .Subscribe(_ => PickNextSprite())
                 .AddTo(_subscriptions);
             
+            invader
+                .DestroyedAsObservable()
+                .Subscribe(_ => DestroySelf())
+                .AddTo(_subscriptions);
+            
             _subscriptions.AddTo(this);
         }
 
@@ -43,7 +48,7 @@ namespace _Project.Scripts.Game.Invaders.View
                 _spriteIndex = 0;
         }
 
-        public void DestroySelf()
+        private void DestroySelf()
         {
             var vfx = Instantiate(_explosionVfxPrefab);
             vfx.transform.position = transform.position;

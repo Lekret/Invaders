@@ -1,6 +1,7 @@
 using _Project.Scripts.Game;
 using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders;
+using _Project.Scripts.Game.Pickups;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private GameSceneData _gameSceneData;
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private InvadersConfig _invadersConfig;
+        [SerializeField] private PickupsConfig _pickupsConfig;
         
         public override void InstallBindings()
         {
@@ -23,6 +25,7 @@ namespace _Project.Scripts.Infrastructure
             BindShip();
             BindInvaders();
             BindBullets();
+            BindPickups();
         }
 
         private void BindConfigs()
@@ -30,6 +33,7 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInstance(_gameSceneData).AsSingle();
             Container.BindInstance(_playerConfig).AsSingle();
             Container.BindInstance(_invadersConfig).AsSingle();
+            Container.BindInstance(_pickupsConfig).AsSingle();
         }
 
         private void BindCore()
@@ -67,6 +71,11 @@ namespace _Project.Scripts.Infrastructure
         private void BindBullets()
         {
             Container.Bind<BulletFactory>().AsSingle();
+        }
+        
+        private void BindPickups()
+        {
+            Container.Bind<PickupFactory>().AsSingle();
         }
     }
 }

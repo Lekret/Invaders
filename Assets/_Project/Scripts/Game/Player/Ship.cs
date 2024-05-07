@@ -107,10 +107,7 @@ namespace _Project.Scripts.Game.Player
             if (_inputWantsAttack && _currentAttackCooldown <= 0f)
             {
                 _currentAttackCooldown = _attackCooldown;
-                var bullet = _bulletFactory.CreateBullet(BulletType.PlayerBullet);
-                bullet.Team = Team.Player;
-                bullet.Position = _position.Value;
-                bullet.Velocity = Vector2.up * 5f;
+                _bulletFactory.CreateBullet(_position.Value, Team.Player);
             }
             
             _inputWantsAttack = false;

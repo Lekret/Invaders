@@ -1,7 +1,9 @@
 ﻿using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Invaders;
+using _Project.Scripts.Game.Pickups;
 using _Project.Scripts.Game.Player;
 using UniRx;
+using UnityEngine;
 
 namespace _Project.Scripts.Game.Services
 {
@@ -14,6 +16,8 @@ namespace _Project.Scripts.Game.Services
         private readonly PlayerScoreCounter _playerScoreCounter;
         private readonly ShipProvider _shipProvider;
         private readonly InvadersFleetProvider _invadersFleetProvider;
+        private readonly PickupFactory _pickupFactory;
+        private readonly PickupsConfig _pickupsConfig;
         
         public GameBuilder(
             IMessagePublisher messagePublisher,
@@ -22,7 +26,9 @@ namespace _Project.Scripts.Game.Services
             InvadersFleetFactory invadersFleetFactory, 
             PlayerScoreCounter playerScoreCounter, 
             ShipProvider shipProvider, 
-            InvadersFleetProvider invadersFleetProvider)
+            InvadersFleetProvider invadersFleetProvider, 
+            PickupFactory pickupFactory, 
+            PickupsConfig pickupsConfig)
         {
             _messagePublisher = messagePublisher;
             _shipFactory = shipFactory;
@@ -31,6 +37,8 @@ namespace _Project.Scripts.Game.Services
             _playerScoreCounter = playerScoreCounter;
             _shipProvider = shipProvider;
             _invadersFleetProvider = invadersFleetProvider;
+            _pickupFactory = pickupFactory;
+            _pickupsConfig = pickupsConfig;
         }
 
         public void CreateGame()
@@ -46,10 +54,17 @@ namespace _Project.Scripts.Game.Services
 
             invadersFleet
                 .InvaderDestroyedAsObservable()
-                .Subscribe(_ => _playerScoreCounter.AddScore(1))
+                .Subscribe(OnInvaderDied)
                 .AddTo(invadersFleet.Subscriptions);
             
             ListenGameOutcome(ship, invadersFleet);
+        }
+
+        private void OnInvaderDied(Invader invader)
+        {
+            _playerScoreCounter.AddScore(1);
+            if (_pickupsConfig.PickupSpawnProbability > Random.Range(0f, 0.999f))
+                _pickupFactory.CreateRandomPickup(invader.Position);
         }
 
         private void ListenGameOutcome(Ship ship, InvadersFleet invadersFleet)
