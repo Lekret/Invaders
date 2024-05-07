@@ -9,6 +9,7 @@ namespace _Project.Scripts.Game.Invaders
         private readonly InvadersFleetState _state;
         private readonly BulletFactory _bulletFactory;
         private float _timeUntilAttack;
+        private float _attackSpeedMultiplier = 1f;
         
         public InvadersFleetAttack(
             InvadersConfig invadersConfig, 
@@ -18,6 +19,11 @@ namespace _Project.Scripts.Game.Invaders
             _invadersConfig = invadersConfig;
             _state = state;
             _bulletFactory = bulletFactory;
+        }
+        
+        public void SetAttackSpeedMultiplier(float multiplier)
+        {
+            _attackSpeedMultiplier = multiplier;
         }
 
         public void Update(float deltaTime)
@@ -29,7 +35,7 @@ namespace _Project.Scripts.Game.Invaders
                     return;
             }
 
-            _timeUntilAttack = _invadersConfig.AttackInterval;
+            _timeUntilAttack = _invadersConfig.AttackInterval / _attackSpeedMultiplier;
 
             var invaderPosition = GetShooterInvaderPosition();
             if (invaderPosition.HasValue)

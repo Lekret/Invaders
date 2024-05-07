@@ -32,12 +32,17 @@ namespace _Project.Scripts.Game.Invaders
         }
         
         public ICollection<IDisposable> Subscriptions => _subscriptions;
-        
+
         public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
         
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
 
         public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
+
+        public void SetAttackSpeedMultiplier(float multiplier)
+        {
+            _invadersFleetAttack.SetAttackSpeedMultiplier(multiplier);
+        }
         
         public void SetTargetShip(Ship targetShip)
         {

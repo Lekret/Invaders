@@ -14,6 +14,7 @@ namespace _Project.Scripts.Game.Services
         private readonly IMessageBroker _messageBroker;
         private readonly InvadersFleetProvider _invadersFleetProvider;
         private readonly InvadersFleetFactory _invadersFleetFactory;
+        private int _currentRound = 1;
 
         public GameOutcomeHandler(
             IMessageBroker messageBroker,
@@ -44,6 +45,8 @@ namespace _Project.Scripts.Game.Services
             {
                 case GameOutcomeType.Win:
                     _invadersFleetFactory.RefillFleetWithInvaders(_invadersFleetProvider.InvadersFleet);
+                    _currentRound++;
+                    _invadersFleetProvider.InvadersFleet.SetAttackSpeedMultiplier(_currentRound);
                     break;
                 case GameOutcomeType.Lose:
                     _messageBroker.ShowWindow<GameOverWindow>();
