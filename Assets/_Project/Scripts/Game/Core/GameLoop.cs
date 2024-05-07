@@ -12,6 +12,7 @@ namespace _Project.Scripts.Game.Core
         private readonly List<IDisposable> _toDisposeEndFrame = new();
         private readonly GameLoopDispatchTable<IUpdatable> _updateLoop = new();
         private readonly GameLoopDispatchTable<IFixedUpdatable> _fixedUpdateLoop = new();
+        private bool _isPaused;
 
 #if UNITY_EDITOR
         public void EditorValidateMissingDispatchTypes()
@@ -20,6 +21,11 @@ namespace _Project.Scripts.Game.Core
             _fixedUpdateLoop.ValidateMissingDispatchTypes();
         }
 #endif
+        
+        public void SetPaused(bool isPaused)
+        {
+            _isPaused = isPaused;
+        }
 
         public GameLoop ThenUpdate<T>() where T : IUpdatable
         {
@@ -65,6 +71,9 @@ namespace _Project.Scripts.Game.Core
         
         void ITickable.Tick()
         {
+            if (_isPaused)
+                return;
+            
             var deltaTime = Time.deltaTime;
             var orderedItems = _updateLoop.OrderedItems;
 
@@ -81,6 +90,9 @@ namespace _Project.Scripts.Game.Core
 
         void IFixedTickable.FixedTick()
         {
+            if (_isPaused)
+                return;
+            
             var deltaTime = Time.deltaTime;
             var orderedItems = _fixedUpdateLoop.OrderedItems;
 
