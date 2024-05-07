@@ -17,26 +17,55 @@ namespace _Project.Scripts.Infrastructure
         
         public override void InstallBindings()
         {
+            BindConfigs();
+            BindCore();
+            BindPlayer();
+            BindShip();
+            BindInvaders();
+            BindBullets();
+        }
+
+        private void BindConfigs()
+        {
             Container.BindInstance(_gameSceneData).AsSingle();
             Container.BindInstance(_playerConfig).AsSingle();
             Container.BindInstance(_invadersConfig).AsSingle();
+        }
+
+        private void BindCore()
+        {
+            Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
             
             Container.BindInterfacesTo<GameStarter>().AsSingle();
             Container.BindInitializableExecutionOrder<GameStarter>(100);
-
-            Container.Bind<GameRestarter>().AsSingle();
-            
             Container.Bind<GameBuilder>().AsSingle();
-            Container.Bind<PlayerScoreCounter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PauseService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
+            Container.Bind<GameRestarter>().AsSingle();
             Container.BindInterfacesTo<GameOutcomeHandler>().AsSingle();
             
-            Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
-
+            Container.BindInterfacesAndSelfTo<PauseService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
+        }
+        
+        private void BindPlayer()
+        {
+            Container.Bind<PlayerScoreCounter>().AsSingle();
             Container.Bind<PlayerInputFactory>().AsSingle();
+        }
+
+        private void BindShip()
+        {
             Container.Bind<ShipFactory>().AsSingle();
+            Container.Bind<ShipProvider>().AsSingle();
+        }
+
+        private void BindInvaders()
+        {
             Container.Bind<InvadersFleetFactory>().AsSingle();
+            Container.Bind<InvadersFleetProvider>().AsSingle();
+        }
+
+        private void BindBullets()
+        {
             Container.Bind<BulletFactory>().AsSingle();
         }
     }

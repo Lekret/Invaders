@@ -31,15 +31,23 @@ namespace _Project.Scripts.Game.Invaders
         
         public InvadersFleet CreateInvadersFleet()
         {
-            var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
-            var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
-            var spawnOriginY = spawnPosition.y;
-
             var invadersFleet = new InvadersFleet(
                 _invadersConfig, 
                 _gameSceneData.InvadersMovementBounds,
                 _bulletFactory);
+            
+            RefillFleetWithInvaders(invadersFleet);
+            _gameLoop.Add(invadersFleet);
+            
+            return invadersFleet;
+        }
 
+        public void RefillFleetWithInvaders(InvadersFleet invadersFleet)
+        {
+            var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
+            var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
+            var spawnOriginY = spawnPosition.y;
+            
             for (var x = 0; x < _invadersConfig.CountInRow; x++)
             {
                 for (var y = 0; y < _invadersConfig.CountInColumn; y++)
@@ -56,9 +64,7 @@ namespace _Project.Scripts.Game.Invaders
                 }
             }
 
-            _gameLoop.Add(invadersFleet);
             invadersFleet.Init();
-            return invadersFleet;
         }
         
         private Invader CreateInvader(int rowIndex)

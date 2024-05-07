@@ -12,28 +12,36 @@ namespace _Project.Scripts.Game.Services
         private readonly PlayerInputFactory _playerInputFactory;
         private readonly InvadersFleetFactory _invadersFleetFactory;
         private readonly PlayerScoreCounter _playerScoreCounter;
-
+        private readonly ShipProvider _shipProvider;
+        private readonly InvadersFleetProvider _invadersFleetProvider;
+        
         public GameBuilder(
             IMessagePublisher messagePublisher,
             ShipFactory shipFactory, 
             PlayerInputFactory playerInputFactory,
             InvadersFleetFactory invadersFleetFactory, 
-            PlayerScoreCounter playerScoreCounter)
+            PlayerScoreCounter playerScoreCounter, 
+            ShipProvider shipProvider, 
+            InvadersFleetProvider invadersFleetProvider)
         {
             _messagePublisher = messagePublisher;
             _shipFactory = shipFactory;
             _playerInputFactory = playerInputFactory;
             _invadersFleetFactory = invadersFleetFactory;
             _playerScoreCounter = playerScoreCounter;
+            _shipProvider = shipProvider;
+            _invadersFleetProvider = invadersFleetProvider;
         }
 
         public void CreateGame()
         {
             var ship = _shipFactory.CreateShip();
+            _shipProvider.Init(ship);
             var playerInput = _playerInputFactory.CreatePlayerInput();
             playerInput.SetInputListener(ship);
             
             var invadersFleet = _invadersFleetFactory.CreateInvadersFleet();
+            _invadersFleetProvider.Init(invadersFleet);
             invadersFleet.SetTargetShip(ship);
 
             invadersFleet

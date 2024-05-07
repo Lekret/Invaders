@@ -10,7 +10,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.GameOutcome
 {
-    public class GameOutcomeWindow : UiWindow
+    public class GameOverWindow : UiWindow
     {
         [Inject] private PauseService _pauseService;
         [Inject] private GameRestarter _gameRestarter;
@@ -18,16 +18,9 @@ namespace _Project.Scripts.UI.GameOutcome
 
         [SerializeField] private CanvasGroup _contentCanvasGroup;
         [SerializeField] private TextMeshProUGUI _scoreText;
-        [SerializeField] private TextMeshProUGUI _outcomeStatusText;
         [SerializeField] private Button _restartButton;
 
         private Coroutine _animateContentAlpha;
-        
-        public void ShowOutcome(GameOutcomeType outcomeType)
-        {
-            _outcomeStatusText.text = outcomeType == GameOutcomeType.Win ? "Win!" : "Game Over";
-            _scoreText.SetText("Score: {0}", _playerScoreCounter.Score);
-        }
 
         protected override void OnInit()
         {
@@ -42,6 +35,7 @@ namespace _Project.Scripts.UI.GameOutcome
         protected override void OnShown()
         {
             _pauseService.AddPauseDemander(this);
+            _scoreText.SetText("Score: {0}", _playerScoreCounter.Score);
             
             if (_animateContentAlpha != null)
                 StopCoroutine(_animateContentAlpha);
