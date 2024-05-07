@@ -26,7 +26,12 @@ namespace _Project.Scripts.UI
             
             _attackButton
                 .OnPointerDownAsObservable()
-                .Subscribe(_ => SendAttackEvent())
+                .Subscribe(_ => SendAttackEvent(true))
+                .AddTo(_subscriptions);
+
+            _attackButton
+                .OnPointerUpAsObservable()
+                .Subscribe(_ => SendAttackEvent(false))
                 .AddTo(_subscriptions);
             
             Observable
@@ -47,9 +52,9 @@ namespace _Project.Scripts.UI
                 .AddTo(_subscriptions);
         }
 
-        private void SendAttackEvent()
+        private void SendAttackEvent(bool isPressed)
         {
-            _messagePublisher.Publish(new UiAttackInputEvent());
+            _messagePublisher.Publish(new UiAttackInputEvent(isPressed));
         }
 
         private void SendMovementInput(float delta)

@@ -3,6 +3,6 @@
     public interface IInputListener
     {
         void OnAttackInput();
-        void SetMovementDeltaInput(float movementDelta);
+        void SetMovementDelta(float movementDelta);
     }
 }

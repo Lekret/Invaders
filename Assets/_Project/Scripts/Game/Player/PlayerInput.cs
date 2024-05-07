@@ -11,7 +11,7 @@ namespace _Project.Scripts.Game.Player
         private readonly CompositeDisposable _subscriptions = new();
         private readonly IMessageReceiver _messageReceiver;
         private IInputListener _inputListener;
-        private bool _uiWantsAttack;
+        private bool _isUiAttackPressed;
         private float _uiInputDelta;
 
         public PlayerInput(IMessageReceiver messageReceiver)
@@ -28,7 +28,7 @@ namespace _Project.Scripts.Game.Player
         {
             _messageReceiver
                 .Receive<UiAttackInputEvent>()
-                .Subscribe(_ => _uiWantsAttack = true)
+                .Subscribe(e => _isUiAttackPressed = e.IsPressed)
                 .AddTo(_subscriptions);
 
             _messageReceiver
@@ -49,7 +49,7 @@ namespace _Project.Scripts.Game.Player
 
             if (_inputListener != null)
             {
-                _inputListener.SetMovementDeltaInput(movementDelta);
+                _inputListener.SetMovementDelta(movementDelta);
                 
                 if (wantsAttack)
                     _inputListener.OnAttackInput();
@@ -66,8 +66,7 @@ namespace _Project.Scripts.Game.Player
 
         private bool ReadWantsAttackInput()
         {
-            var wantsAttack = _uiWantsAttack || Input.GetKeyDown(KeyCode.Space);
-            _uiWantsAttack = false;
+            var wantsAttack = _isUiAttackPressed || Input.GetKey(KeyCode.Space);
             return wantsAttack;
         }
     }
