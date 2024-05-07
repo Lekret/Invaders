@@ -15,16 +15,17 @@ namespace _Project.Scripts.Game.Invaders
         private readonly ReactiveCommand _reachedPlayerCommand = new();
         private readonly List<List<Invader>> _invadersRows = new();
         private readonly InvadersConfig _invadersConfig;
+        private readonly Bounds _movementBounds;
         private Ship _targetShip;
         private int _initialCount;
         private int _currentCount;
         private float _timeUntilMovement;
-        private int _ticksUntilReachSide;
         private int _direction = 1;
-        
-        public InvadersFleet(InvadersConfig invadersConfig)
+
+        public InvadersFleet(InvadersConfig invadersConfig, Bounds movementBounds)
         {
             _invadersConfig = invadersConfig;
+            _movementBounds = movementBounds;
         }
 
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
@@ -35,7 +36,7 @@ namespace _Project.Scripts.Game.Invaders
         {
             _targetShip = targetShip;
         }
-        
+
         public void AddInvader(Invader invader, int rowIndex)
         {
             var safeCounter = 0;
@@ -44,12 +45,11 @@ namespace _Project.Scripts.Game.Invaders
 
             _invadersRows[rowIndex].Add(invader);
         }
-        
+
         public void Init()
         {
             _initialCount = _invadersRows.Sum(x => x.Count);
             _currentCount = _initialCount;
-            _ticksUntilReachSide = Mathf.FloorToInt(_invadersConfig.MovementTicksToReachSide / 2f);
 
             for (var rowIndex = 0; rowIndex < _invadersRows.Count; rowIndex++)
             {
@@ -60,13 +60,13 @@ namespace _Project.Scripts.Game.Invaders
                 {
                     invader
                         .DestroyedAsObservable()
-                        .Subscribe(inv => OnInvaderDied(inv, rowIndexCopy))
+                        .Subscribe(inv => OnInvaderDestroyed(inv, rowIndexCopy))
                         .AddTo(_subscriptions);
                 }
             }
         }
 
-        private void OnInvaderDied(Invader invader, int rowIndex)
+        private void OnInvaderDestroyed(Invader invader, int rowIndex)
         {
             var row = _invadersRows[rowIndex];
             row.Remove(invader);
@@ -105,10 +105,14 @@ namespace _Project.Scripts.Game.Invaders
 
         private void MoveInvaders()
         {
-            _ticksUntilReachSide--;
-            var reachedSide = _ticksUntilReachSide <= 0;
+            var reachedSide = IsAnyReachedSide();
+            if (reachedSide)
+            {
+                _direction *= -1;
+            }
+
             var movementX = _invadersConfig.HorizontalMovementPerTick * _direction;
-            var movementY = reachedSide ? -_invadersConfig.VerticalMovementPerReachSide : 0f;
+            var movementY = reachedSide ? -_invadersConfig.VerticalMovementPerReachedSide : 0f;
             var movementVec = new Vector3(movementX, movementY);
 
             foreach (var row in _invadersRows)
@@ -121,10 +125,31 @@ namespace _Project.Scripts.Game.Invaders
 
             if (reachedSide)
             {
-                _ticksUntilReachSide = _invadersConfig.MovementTicksToReachSide;
-                _direction *= -1;
                 CheckIfReachedTarget();
             }
+        }
+
+        private bool IsAnyReachedSide()
+        {
+            var minX = float.MaxValue;
+            var maxX = float.MinValue;
+
+            foreach (var row in _invadersRows)
+            {
+                foreach (var invader in row)
+                {
+                    var testPosition = invader.Position;
+                    if (testPosition.x < minX)
+                        minX = testPosition.x;
+
+                    if (testPosition.x > maxX)
+                        maxX = testPosition.x;
+                }
+            }
+
+            var isReachAnySide = minX < _movementBounds.min.x ||
+                                 maxX > _movementBounds.max.x;
+            return isReachAnySide;
         }
 
         private void CheckIfReachedTarget()
@@ -140,7 +165,7 @@ namespace _Project.Scripts.Game.Invaders
             var lastNonEmptyRow = _invadersRows.FindLast(l => l.Count > 0);
             if (lastNonEmptyRow == null)
                 return false;
-            
+
             var invaderFromLastRow = lastNonEmptyRow[0];
             var yDistToShip = invaderFromLastRow.Position.y - _targetShip.Position.y;
             var isReachedTarget = yDistToShip <= _invadersConfig.ReachedPlayerToleranceY;

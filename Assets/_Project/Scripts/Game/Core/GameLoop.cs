@@ -10,8 +10,8 @@ namespace _Project.Scripts.Game.Core
     {
         private readonly List<IDisposable> _disposables = new();
         private readonly List<IDisposable> _toDisposeEndFrame = new();
-        private readonly InnerGameLoop<IUpdatable> _updateLoop = new();
-        private readonly InnerGameLoop<IFixedUpdatable> _fixedUpdateLoop = new();
+        private readonly GameLoopDispatchTable<IUpdatable> _updateLoop = new();
+        private readonly GameLoopDispatchTable<IFixedUpdatable> _fixedUpdateLoop = new();
 
 #if UNITY_EDITOR
         public void EditorValidateMissingDispatchTypes()

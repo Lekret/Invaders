@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 
 namespace _Project.Scripts.Game
@@ -9,7 +10,8 @@ namespace _Project.Scripts.Game
         {
             gameLoop
                 .ThenUpdate<PlayerInput>()
-                .ThenUpdate<Ship>();
+                .ThenUpdate<Ship>()
+                .ThenUpdate<InvadersFleet>();
                 
 #if UNITY_EDITOR
             gameLoop.EditorValidateMissingDispatchTypes();

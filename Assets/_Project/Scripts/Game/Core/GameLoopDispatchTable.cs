@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Core
 {
-    public class InnerGameLoop<T>
+    public class GameLoopDispatchTable<T>
     {
         private readonly Dictionary<Type, List<T>> _itemsMap = new();
         private readonly List<(Type, List<T>)> _orderedItems = new();
@@ -26,7 +26,7 @@ namespace _Project.Scripts.Game.Core
         {
             if (!_itemsMap.TryGetValue(item.GetType(), out var items))
             {
-                Debug.LogWarning($"[GameLoopItem<{typeof(T).Name}>] Type is not registered: {item.GetType()}");
+                Debug.LogWarning($"[GameLoopDispatchTable<{typeof(T).Name}>] Type is not registered: {item.GetType()}");
                 return;
             }
                 
@@ -42,7 +42,7 @@ namespace _Project.Scripts.Game.Core
         {
             if (_itemsMap.TryGetValue(typeof(TImpl), out var existingItems))
             {
-                Debug.LogError($"[GameLoopItem<{typeof(T).Name}>] Type is already registered: {typeof(TImpl)}");
+                Debug.LogError($"[GameLoopDispatchTable<{typeof(T).Name}>] Type is already registered: {typeof(TImpl)}");
                 items = existingItems;
                 return;
             }
@@ -60,7 +60,7 @@ namespace _Project.Scripts.Game.Core
                 if (_itemsMap.ContainsKey(derivedType))
                     continue;
 
-                Debug.LogWarning($"[GameLoopItem<{typeof(T).Name}>] Type is not registered for dispatch: {derivedType}");
+                Debug.LogWarning($"[GameLoopDispatchTable<{typeof(T).Name}>] Type is not registered for dispatch: {derivedType}");
             }
         }
 #endif
