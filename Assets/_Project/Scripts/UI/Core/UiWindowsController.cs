@@ -64,7 +64,7 @@ namespace _Project.Scripts.UI.Core
 
             windowEvent.Action?.Invoke(window);
         }
-        
+                
         private UiWindow FindWindow(Type type)
         {
             foreach (var window in _windows)

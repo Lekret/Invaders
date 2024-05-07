@@ -18,6 +18,7 @@ namespace _Project.Scripts.Game.Invaders
         [SerializeField] private int _movementTicksToReachSide = 20;
         [SerializeField] private float _horizontalMovementPerTick = 0.1f;
         [SerializeField] private float _verticalMovementPerReachSide = 0.5f;
+        [SerializeField] private float _reachedPlayerToleranceY = 0.5f;
         [Header("Prefabs")]
         [SerializeField] private InvaderView _invaderViewPrefab;
         [SerializeField] private BulletView _bulletViewPrefab;
@@ -32,6 +33,7 @@ namespace _Project.Scripts.Game.Invaders
         public int MovementTicksToReachSide => _movementTicksToReachSide;
         public float HorizontalMovementPerTick => _horizontalMovementPerTick;
         public float VerticalMovementPerReachSide => _verticalMovementPerReachSide;
+        public float ReachedPlayerToleranceY => _reachedPlayerToleranceY;
         
         public InvaderView InvaderViewPrefab => _invaderViewPrefab;
         public BulletView BulletViewPrefab => _bulletViewPrefab;

@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Game.Services;
 using _Project.Scripts.UI.Core;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,17 +8,30 @@ using Zenject;
 
 namespace _Project.Scripts.UI
 {
-    public class PauseWindow : UiWindow
+    public class GameOutcomeWindow : UiWindow
     {
         [Inject] private PauseService _pauseService;
         [Inject] private GameRestarter _gameRestarter;
 
-        [SerializeField] private Button _continueButton;
+        [SerializeField] private TextMeshProUGUI _outcomeStatusText;
+        [SerializeField] private Color _winColor = Color.green;
+        [SerializeField] private Color _loseColor = Color.red;
         [SerializeField] private Button _restartButton;
-        
+
+        public void ConfigureAsWin()
+        {
+            _outcomeStatusText.text = "Win!";
+            _outcomeStatusText.color = _winColor;
+        }
+
+        public void ConfigureAsLose()
+        {
+            _outcomeStatusText.text = "Game Over";
+            _outcomeStatusText.color = _loseColor;
+        }
+
         protected override void OnInit()
         {
-            _continueButton.OnClickAsObservable().Subscribe(_ => Continue()).AddTo(gameObject);
             _restartButton.OnClickAsObservable().Subscribe(_ => Restart()).AddTo(gameObject);
         }
 
@@ -34,11 +48,6 @@ namespace _Project.Scripts.UI
         protected override void OnHidden()
         {
             _pauseService.RemovePauseDemander(this);
-        }
-
-        private void Continue()
-        {
-            Hide();
         }
 
         private void Restart()

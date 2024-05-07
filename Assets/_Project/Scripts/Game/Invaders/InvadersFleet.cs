@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Player;
 using UniRx;
 using UnityEngine;
 
@@ -14,12 +15,13 @@ namespace _Project.Scripts.Game.Invaders
         private readonly ReactiveCommand _reachedPlayerCommand = new();
         private readonly List<List<Invader>> _invadersRows = new();
         private readonly InvadersConfig _invadersConfig;
+        private Ship _targetShip;
         private int _initialCount;
         private int _currentCount;
         private float _timeUntilMovement;
         private int _ticksUntilReachSide;
         private int _direction = 1;
-
+        
         public InvadersFleet(InvadersConfig invadersConfig)
         {
             _invadersConfig = invadersConfig;
@@ -29,6 +31,11 @@ namespace _Project.Scripts.Game.Invaders
 
         public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
 
+        public void SetTargetShip(Ship targetShip)
+        {
+            _targetShip = targetShip;
+        }
+        
         public void AddInvader(Invader invader, int rowIndex)
         {
             var safeCounter = 0;
@@ -116,7 +123,28 @@ namespace _Project.Scripts.Game.Invaders
             {
                 _ticksUntilReachSide = _invadersConfig.MovementTicksToReachSide;
                 _direction *= -1;
+                CheckIfReachedTarget();
             }
+        }
+
+        private void CheckIfReachedTarget()
+        {
+            if (IsReachedTargetShip())
+            {
+                _reachedPlayerCommand.Execute();
+            }
+        }
+
+        private bool IsReachedTargetShip()
+        {
+            var lastNonEmptyRow = _invadersRows.FindLast(l => l.Count > 0);
+            if (lastNonEmptyRow == null)
+                return false;
+            
+            var invaderFromLastRow = lastNonEmptyRow[0];
+            var yDistToShip = invaderFromLastRow.Position.y - _targetShip.Position.y;
+            var isReachedTarget = yDistToShip <= _invadersConfig.ReachedPlayerToleranceY;
+            return isReachedTarget;
         }
     }
 }

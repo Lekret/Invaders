@@ -1,12 +1,11 @@
-﻿using System;
-using _Project.Scripts.Game.Core;
+﻿using _Project.Scripts.Game.Core;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Core;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Game
+namespace _Project.Scripts.Game.Services
 {
     public class GameStarter : IInitializable
     {

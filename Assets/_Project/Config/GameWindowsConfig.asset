@@ -15,3 +15,4 @@ MonoBehaviour:
   _windowPrefabs:
   - {fileID: 2895227494468304197, guid: 9fe69521126761844b087f9df840e4ba, type: 3}
   - {fileID: 1046896751433319566, guid: d0c1228844a020a44ae1e4925ab845a9, type: 3}
+  - {fileID: 1046896751433319566, guid: 331fa1ffbc55d9f4c98a92da7e31fcc8, type: 3}

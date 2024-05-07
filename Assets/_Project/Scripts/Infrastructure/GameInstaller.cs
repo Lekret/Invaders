@@ -27,9 +27,12 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesTo<GameStarter>().AsSingle();
             Container.BindInitializableExecutionOrder<GameStarter>(100);
 
+            Container.Bind<GameRestarter>().AsSingle();
+            
             Container.Bind<GameBuilder>().AsSingle();
             Container.Bind<PauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
+            Container.BindInterfacesTo<GameOutcomeHandler>().AsSingle();
             
             Container.Bind<BulletFactory>().AsSingle();
 

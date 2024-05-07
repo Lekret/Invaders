@@ -50,7 +50,7 @@ namespace _Project.Scripts.Game
             var ship = CreateShip(gameLoop);
             var playerInput = CreatePlayerInput(gameLoop);
             playerInput.SetInputListener(ship);
-            var invadersFleet = CreateInvadersFleet(gameLoop);
+            var invadersFleet = CreateInvadersFleet(gameLoop, ship);
 
             var gameOutcomeDisposable = Disposable.Empty;
             gameOutcomeDisposable = Observable
@@ -92,7 +92,7 @@ namespace _Project.Scripts.Game
             return ship;
         }
 
-        private InvadersFleet CreateInvadersFleet(GameLoop gameLoop)
+        private InvadersFleet CreateInvadersFleet(GameLoop gameLoop, Ship ship)
         {
             var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
             var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
@@ -117,6 +117,7 @@ namespace _Project.Scripts.Game
             }
 
             gameLoop.Add(invadersFleet);
+            invadersFleet.SetTargetShip(ship);
             invadersFleet.Init();
             return invadersFleet;
         }
