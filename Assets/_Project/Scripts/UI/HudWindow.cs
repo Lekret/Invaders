@@ -10,8 +10,9 @@ namespace _Project.Scripts.UI
 {
     public class HudWindow : UiWindow
     {
-        [Inject] private IMessageBroker _messageBroker;
+        [Inject] private IMessagePublisher _messagePublisher;
 
+        [SerializeField] private HealthBar _healthBar;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private TouchButton _attackButton;
         [SerializeField] private TouchButton _moveLeftButton;
@@ -21,6 +22,8 @@ namespace _Project.Scripts.UI
 
         protected override void OnInit()
         {
+            _healthBar.Init();
+            
             _attackButton
                 .OnPointerDownAsObservable()
                 .Subscribe(_ => SendAttackEvent())
@@ -46,21 +49,22 @@ namespace _Project.Scripts.UI
 
         private void SendAttackEvent()
         {
-            _messageBroker.Publish(new UiAttackInputEvent());
+            _messagePublisher.Publish(new UiAttackInputEvent());
         }
 
         private void SendMovementInput(float delta)
         {
-            _messageBroker.Publish(new UiMovementInputEvent(delta));
+            _messagePublisher.Publish(new UiMovementInputEvent(delta));
         }
 
         private void PauseGame()
         {
-            _messageBroker.ShowWindow<PauseWindow>();
+            _messagePublisher.ShowWindow<PauseWindow>();
         }
 
         protected override void OnDisposed()
         {
+            _healthBar.Dispose();
             _subscriptions.Dispose();
         }
     }

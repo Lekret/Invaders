@@ -10,18 +10,18 @@ namespace _Project.Scripts.UI.Core
     public class UiWindowsController : IInitializable, IDisposable
     {
         private readonly UiWindowsConfig _windowsConfig;
-        private readonly IMessageBroker _messageBroker;
+        private readonly IMessageReceiver _messageReceiver;
         private readonly IInstantiator _instantiator;
         private readonly CompositeDisposable _subscriptions = new();
         private readonly List<UiWindow> _windows = new();
 
         public UiWindowsController(
             UiWindowsConfig windowsConfig,
-            IMessageBroker messageBroker, 
+            IMessageReceiver messageReceiver, 
             IInstantiator instantiator)
         {
             _windowsConfig = windowsConfig;
-            _messageBroker = messageBroker;
+            _messageReceiver = messageReceiver;
             _instantiator = instantiator;
         }
 
@@ -38,7 +38,7 @@ namespace _Project.Scripts.UI.Core
                 window.Init();
             }
 
-            _messageBroker.Receive<UiWindowEvent>().Subscribe(HandleWindowEvent).AddTo(_subscriptions);
+            _messageReceiver.Receive<UiWindowEvent>().Subscribe(HandleWindowEvent).AddTo(_subscriptions);
             Debug.Log($"[WindowsController] Windows created: {_windows.Count}");
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
@@ -10,10 +11,12 @@ namespace _Project.Scripts.Game.Player
     public class Ship : IUpdatable, IDisposable, IInputListener
     {
         private readonly BulletFactory _bulletFactory;
-        private readonly CameraProvider _cameraProvider;
         private readonly GameConfig _gameConfig;
+        private readonly Bounds _shipMovementBounds;
+        private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
         private readonly ReactiveCommand<Ship> _diedCommand = new();
+        private readonly ReactiveCommand<int> _healthChangedCommand = new();
         private bool _wantsAttackInput;
         private float _movementDeltaInput;
         private float _attackCooldown;
@@ -23,15 +26,17 @@ namespace _Project.Scripts.Game.Player
         
         public Ship(
             BulletFactory bulletFactory, 
-            CameraProvider cameraProvider,
-            GameConfig gameConfig)
+            GameConfig gameConfig,
+            Bounds shipMovementBounds)
         {
             _bulletFactory = bulletFactory;
-            _cameraProvider = cameraProvider;
             _gameConfig = gameConfig;
+            _shipMovementBounds = shipMovementBounds;
         }
-
+        
         public IObservable<Vector3> PositionAsObservable() => _position;
+        
+        public IObservable<int> HealthAsObservable() => _healthChangedCommand;
 
         public IObservable<Ship> DiedAsObservable() => _diedCommand;
         
@@ -59,6 +64,8 @@ namespace _Project.Scripts.Game.Player
             set => _attackCooldown = value;
         }
 
+        public ICollection<IDisposable> Subscriptions => _subscriptions;
+
         public void Dispose()
         {
             _position.Dispose();
@@ -85,19 +92,7 @@ namespace _Project.Scripts.Game.Player
         {
             var position = _position.Value;
             position.x += _movementDeltaInput * _speed * deltaTime;
-
-            var viewportPosition = _cameraProvider.Camera.WorldToViewportPoint(position);
-            var clampedViewportX = Mathf.Clamp(
-                viewportPosition.x, 
-                1f - _gameConfig.AvailableScreenArea,
-                _gameConfig.AvailableScreenArea);
-
-            if (!Mathf.Approximately(viewportPosition.x, clampedViewportX))
-            {
-                viewportPosition.x = clampedViewportX;
-                position = _cameraProvider.Camera.ViewportToWorldPoint(viewportPosition);
-            }
-            
+            position.x = Mathf.Clamp(position.x, _shipMovementBounds.min.x, _shipMovementBounds.max.x);
             _position.Value = position;
         }
 
@@ -127,7 +122,8 @@ namespace _Project.Scripts.Game.Player
                 return;
             
             _health--;
-
+            _healthChangedCommand.Execute(_health);
+            
             if (_health <= 0)
                 _diedCommand.Execute(this);
         }

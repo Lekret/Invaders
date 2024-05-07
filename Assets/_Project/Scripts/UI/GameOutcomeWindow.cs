@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Game.Services;
+﻿using System.Collections;
+using _Project.Scripts.Game.Services;
 using _Project.Scripts.UI.Core;
 using TMPro;
 using UniRx;
@@ -13,21 +14,20 @@ namespace _Project.Scripts.UI
         [Inject] private PauseService _pauseService;
         [Inject] private GameRestarter _gameRestarter;
 
+        [SerializeField] private CanvasGroup _contentCanvasGroup;
         [SerializeField] private TextMeshProUGUI _outcomeStatusText;
-        [SerializeField] private Color _winColor = Color.green;
-        [SerializeField] private Color _loseColor = Color.red;
         [SerializeField] private Button _restartButton;
 
+        private Coroutine _animateContentAlpha;
+        
         public void ConfigureAsWin()
         {
             _outcomeStatusText.text = "Win!";
-            _outcomeStatusText.color = _winColor;
         }
 
         public void ConfigureAsLose()
         {
             _outcomeStatusText.text = "Game Over";
-            _outcomeStatusText.color = _loseColor;
         }
 
         protected override void OnInit()
@@ -43,10 +43,31 @@ namespace _Project.Scripts.UI
         protected override void OnShown()
         {
             _pauseService.AddPauseDemander(this);
+            
+            if (_animateContentAlpha != null)
+                StopCoroutine(_animateContentAlpha);
+            
+            _animateContentAlpha = StartCoroutine(AnimateContentAlpha(fromAlpha: 0f, toAlpha: 1f, duration: 2f));
+        }
+
+        private IEnumerator AnimateContentAlpha(float fromAlpha, float toAlpha, float duration)
+        {
+            _contentCanvasGroup.alpha = fromAlpha;
+
+            var time = 0f;
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                _contentCanvasGroup.alpha = Mathf.Lerp(fromAlpha, toAlpha, time / duration);
+                yield return null;
+            }
         }
 
         protected override void OnHidden()
         {
+            if (_animateContentAlpha != null)
+                StopCoroutine(_animateContentAlpha);
+            
             _pauseService.RemovePauseDemander(this);
         }
 

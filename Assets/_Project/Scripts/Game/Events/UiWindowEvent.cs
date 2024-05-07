@@ -19,11 +19,11 @@ namespace _Project.Scripts.Events
     public static class WindowEventExtensions
     {
         public static void ShowWindow<TWindow>(
-            this IMessageBroker messageBroker, 
+            this IMessagePublisher messagePublisher, 
             Action<TWindow> beforeShow = null)
             where TWindow : UiWindow
         {
-            messageBroker.Publish(new UiWindowEvent(typeof(TWindow), window =>
+            messagePublisher.Publish(new UiWindowEvent(typeof(TWindow), window =>
             {
                 beforeShow?.Invoke((TWindow) window);
                 window.Show();
@@ -31,21 +31,21 @@ namespace _Project.Scripts.Events
         }
         
         public static void HideWindow<TWindow>(
-            this IMessageBroker messageBroker) 
+            this IMessagePublisher messagePublisher) 
             where TWindow : UiWindow
         {
-            messageBroker.Publish(new UiWindowEvent(typeof(TWindow), window =>
+            messagePublisher.Publish(new UiWindowEvent(typeof(TWindow), window =>
             {
                 window.Hide();
             }));
         }
         
         public static void SendToWindow<TWindow>(
-            this IMessageBroker messageBroker, 
+            this IMessagePublisher messagePublisher, 
             Action<TWindow> action) 
             where TWindow : UiWindow
         {
-            messageBroker.Publish(new UiWindowEvent(typeof(TWindow), window =>
+            messagePublisher.Publish(new UiWindowEvent(typeof(TWindow), window =>
             {
                 action?.Invoke((TWindow) window);
             }));

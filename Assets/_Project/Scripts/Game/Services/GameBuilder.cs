@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Events;
 using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player;
@@ -77,7 +78,7 @@ namespace _Project.Scripts.Game.Services
 
         private Ship CreateShip(GameLoop gameLoop)
         {
-            var ship = new Ship(_bulletFactory, _cameraProvider, _gameConfig);
+            var ship = new Ship(_bulletFactory, _gameConfig, _gameSceneData.ShipMovementBounds);
             ship.Health = _playerConfig.ShipHealth;
             ship.Position = _gameSceneData.ShipSpawnPosition;
             ship.Speed = _playerConfig.ShipSpeed;
@@ -86,6 +87,12 @@ namespace _Project.Scripts.Game.Services
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             shipView.Init(ship);
             gameLoop.Add(ship);
+
+            ship
+                .HealthAsObservable()
+                .Subscribe(x => _messageBroker.Publish(new ShipHealthChangedEvent(x)))
+                .AddTo(ship.Subscriptions);
+            
             return ship;
         }
 

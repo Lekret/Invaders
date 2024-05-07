@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2448256251855152609}
   - component: {fileID: 1334264263283089381}
   - component: {fileID: 605357275947052464}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: InvadersBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,10 +67,10 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -87,10 +87,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 5554336087700332715}
   - component: {fileID: 110964951018581705}
   - component: {fileID: 179159983520908029}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

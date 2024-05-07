@@ -12,23 +12,23 @@ namespace _Project.Scripts.Game.Services
     {
         private readonly GameLoop _gameLoop;
         private readonly GameBuilder _gameBuilder;
-        private readonly IMessageBroker _messageBroker;
+        private readonly IMessagePublisher _messagePublisher;
 
         public GameStarter(
             GameLoop gameLoop, 
             GameBuilder gameBuilder, 
-            IMessageBroker messageBroker)
+            IMessagePublisher messagePublisher)
         {
             _gameLoop = gameLoop;
             _gameBuilder = gameBuilder;
-            _messageBroker = messageBroker;
+            _messagePublisher = messagePublisher;
         }
 
         void IInitializable.Initialize()
         {
             _gameLoop.RegisterGameLoopDefaultOrder();
             _gameBuilder.CreateGame(_gameLoop);
-            _messageBroker.ShowWindow<HudWindow>();
+            _messagePublisher.ShowWindow<HudWindow>();
             Debug.Log("Game started");
         }
     }
