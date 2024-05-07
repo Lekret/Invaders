@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Events;
+﻿using _Project.Scripts.Game.Events;
 using _Project.Scripts.UI.Core;
 using _Project.Scripts.UI.Utils;
 using UniRx;

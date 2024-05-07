@@ -1,6 +1,6 @@
 ﻿using System;
-using _Project.Scripts.Events;
 using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.Events;
 using UniRx;
 using UnityEngine;
 

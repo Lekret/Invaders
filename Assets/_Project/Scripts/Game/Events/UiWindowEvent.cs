@@ -2,7 +2,7 @@
 using _Project.Scripts.UI.Core;
 using UniRx;
 
-namespace _Project.Scripts.Events
+namespace _Project.Scripts.Game.Events
 {
     public readonly struct UiWindowEvent
     {

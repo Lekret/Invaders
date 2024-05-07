@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Events
+﻿namespace _Project.Scripts.Game.Events
 {
     public readonly struct UiAttackInputEvent
     {
