@@ -39,12 +39,12 @@ namespace _Project.Scripts.Game.Projectiles
                 case Team.Player:
                     viewPrefab = _playerConfig.BulletViewPrefab;
                     bullet.Team = Team.Player;
-                    bullet.Velocity = Vector2.up * 5f;
+                    bullet.Velocity = Vector2.up * _playerConfig.BulletSpeed;
                     break;
                 case Team.Invaders:
                     viewPrefab = _invadersConfig.BulletViewPrefab;
                     bullet.Team = Team.Invaders;
-                    bullet.Velocity = Vector2.down * 5f;
+                    bullet.Velocity = Vector2.down * _invadersConfig.BulletSpeed;
                     break;
                 default:
                     Debug.LogError(team);
