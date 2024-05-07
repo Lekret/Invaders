@@ -24,3 +24,19 @@ MonoBehaviour:
   _attackInterval: 3
   _invaderViewPrefab: {fileID: 6453431421973733806, guid: 3d0a8fa5eb0dcc141be5d14545d9a606, type: 3}
   _bulletViewPrefab: {fileID: 2448256251855152609, guid: 1d5e7d490855c9047a8e3e80ed44044e, type: 3}
+  _skinsPerRow:
+  - Sprites:
+    - {fileID: -781349719, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+    - {fileID: -362701601, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+  - Sprites:
+    - {fileID: 768962469, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+    - {fileID: 1712499092, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+  - Sprites:
+    - {fileID: -381493256, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+    - {fileID: 2068665708, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+  - Sprites:
+    - {fileID: 1149683508, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+    - {fileID: -555693614, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+  - Sprites:
+    - {fileID: -992292719, guid: 67a009d48edbef643ad680380d66167c, type: 3}
+    - {fileID: 1080003233, guid: 67a009d48edbef643ad680380d66167c, type: 3}

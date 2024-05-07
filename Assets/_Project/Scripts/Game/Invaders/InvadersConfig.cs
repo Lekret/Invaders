@@ -23,6 +23,8 @@ namespace _Project.Scripts.Game.Invaders
         [Header("Prefabs")]
         [SerializeField] private InvaderView _invaderViewPrefab;
         [SerializeField] private BulletView _bulletViewPrefab;
+        [Header("Skin")] 
+        [SerializeField] private InvaderSkin[] _skinsPerRow;
         
         public int CountInRow => _countInRow;
         public int CountInColumn => _countInColumn;
@@ -39,5 +41,12 @@ namespace _Project.Scripts.Game.Invaders
         
         public InvaderView InvaderViewPrefab => _invaderViewPrefab;
         public BulletView BulletViewPrefab => _bulletViewPrefab;
+
+        public InvaderSkin GetSkinByRow(int rowIndex)
+        {
+            var cycledIndex = rowIndex % _skinsPerRow.Length;
+            var skin = _skinsPerRow[cycledIndex];
+            return skin;
+        }
     }
 }

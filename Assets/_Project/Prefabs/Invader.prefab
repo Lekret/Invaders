@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _explosionVfxPrefab: {fileID: 720611894263926932, guid: 20a5e43ab00b781459bc31f39c8c1be8, type: 3}
+  _spriteRenderer: {fileID: 5453841873762775774}
 --- !u!61 &430206314001038502
 BoxCollider2D:
   m_ObjectHideFlags: 0

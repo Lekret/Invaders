@@ -62,6 +62,7 @@ namespace _Project.Scripts.Game.Invaders
                 foreach (var invader in row)
                 {
                     invader.Position += movementVec;
+                    invader.OnMoved();
                 }
             }
         }

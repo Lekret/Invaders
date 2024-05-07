@@ -111,7 +111,7 @@ namespace _Project.Scripts.Game.Services
             {
                 for (var y = 0; y < _invadersConfig.CountInColumn; y++)
                 {
-                    var invader = CreateInvader(gameLoop);
+                    var invader = CreateInvader(gameLoop, rowIndex: y);
                     var invaderPosition = new Vector3
                     {
                         x = spawnOriginX + x * _invadersConfig.SpawnHorizontalSpacing,
@@ -129,11 +129,12 @@ namespace _Project.Scripts.Game.Services
             return invadersFleet;
         }
 
-        private Invader CreateInvader(GameLoop gameLoop)
+        private Invader CreateInvader(GameLoop gameLoop, int rowIndex)
         {
             var invader = new Invader();
             var invaderView = _instantiator.InstantiatePrefabForComponent<InvaderView>(_invadersConfig.InvaderViewPrefab);
-            invaderView.Init(invader);
+            var skin = _invadersConfig.GetSkinByRow(rowIndex);
+            invaderView.Init(invader, skin);
 
             invader
                 .DestroyedAsObservable()
