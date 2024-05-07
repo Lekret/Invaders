@@ -95,7 +95,10 @@ namespace _Project.Scripts.Game.Services
             var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
             var spawnOriginY = spawnPosition.y;
 
-            var invadersFleet = new InvadersFleet(_invadersConfig, _gameSceneData.InvadersMovementBounds);
+            var invadersFleet = new InvadersFleet(
+                _invadersConfig, 
+                _gameSceneData.InvadersMovementBounds,
+                _bulletFactory);
 
             for (var x = 0; x < _invadersConfig.CountInRow; x++)
             {

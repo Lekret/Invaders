@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Player;
+using _Project.Scripts.Game.Projectiles;
 using UniRx;
 using UnityEngine;
 
@@ -13,19 +14,20 @@ namespace _Project.Scripts.Game.Invaders
         private readonly CompositeDisposable _subscriptions = new();
         private readonly ReactiveCommand _allInvadersDestroyedCommand = new();
         private readonly ReactiveCommand _reachedPlayerCommand = new();
-        private readonly List<List<Invader>> _invadersRows = new();
+        private readonly InvadersFleetState _state = new();
         private readonly InvadersConfig _invadersConfig;
-        private readonly Bounds _movementBounds;
+        private readonly InvadersFleetMovement _invadersFleetMovement;
+        private readonly InvadersFleetAttack _invadersFleetAttack;
         private Ship _targetShip;
-        private int _initialCount;
-        private int _currentCount;
-        private float _timeUntilMovement;
-        private int _direction = 1;
 
-        public InvadersFleet(InvadersConfig invadersConfig, Bounds movementBounds)
+        public InvadersFleet(
+            InvadersConfig invadersConfig,
+            Bounds movementBounds,
+            BulletFactory bulletFactory)
         {
             _invadersConfig = invadersConfig;
-            _movementBounds = movementBounds;
+            _invadersFleetMovement = new InvadersFleetMovement(_invadersConfig, _state, movementBounds);
+            _invadersFleetAttack = new InvadersFleetAttack(_invadersConfig, _state, bulletFactory);
         }
 
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
@@ -40,20 +42,20 @@ namespace _Project.Scripts.Game.Invaders
         public void AddInvader(Invader invader, int rowIndex)
         {
             var safeCounter = 0;
-            while (rowIndex >= _invadersRows.Count || safeCounter++ < 100)
-                _invadersRows.Add(new List<Invader>());
+            while (rowIndex >= _state.Rows.Count || safeCounter++ < 100)
+                _state.Rows.Add(new List<Invader>());
 
-            _invadersRows[rowIndex].Add(invader);
+            _state.Rows[rowIndex].Add(invader);
         }
 
         public void Init()
         {
-            _initialCount = _invadersRows.Sum(x => x.Count);
-            _currentCount = _initialCount;
+            _state.InitialCount = _state.Rows.Sum(x => x.Count);
+            _state.CurrentCount = _state.InitialCount;
 
-            for (var rowIndex = 0; rowIndex < _invadersRows.Count; rowIndex++)
+            for (var rowIndex = 0; rowIndex < _state.Rows.Count; rowIndex++)
             {
-                var row = _invadersRows[rowIndex];
+                var row = _state.Rows[rowIndex];
                 var rowIndexCopy = rowIndex;
 
                 foreach (var invader in row)
@@ -68,101 +70,48 @@ namespace _Project.Scripts.Game.Invaders
 
         private void OnInvaderDestroyed(Invader invader, int rowIndex)
         {
-            var row = _invadersRows[rowIndex];
+            var row = _state.Rows[rowIndex];
             row.Remove(invader);
-            _currentCount--;
-            if (_currentCount <= 0)
+            _state.CurrentCount--;
+            if (_state.CurrentCount <= 0)
                 _allInvadersDestroyedCommand.Execute();
         }
 
         void IDisposable.Dispose()
         {
             _subscriptions.Dispose();
+            _reachedPlayerCommand.Dispose();
             _allInvadersDestroyedCommand.Dispose();
         }
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            if (_timeUntilMovement > 0f)
-                _timeUntilMovement -= deltaTime;
-
-            if (_timeUntilMovement > 0f)
-                return;
-
-            _timeUntilMovement = CalculateNextMovementInterval();
-            MoveInvaders();
+            UpdateMovement(deltaTime);
+            UpdateAttack(deltaTime);
         }
 
-        private float CalculateNextMovementInterval()
+        private void UpdateMovement(float deltaTime)
         {
-            var currentToInitial = (float) _currentCount / _initialCount;
-            var movementInterval = Mathf.Lerp(
-                _invadersConfig.MinMovementInterval,
-                _invadersConfig.MaxMovementInterval,
-                currentToInitial);
-            return movementInterval;
-        }
+            var direction = _invadersFleetMovement.Direction;
+            _invadersFleetMovement.Update(deltaTime);
 
-        private void MoveInvaders()
-        {
-            var reachedSide = IsAnyReachedSide();
-            if (reachedSide)
+            if (direction != _invadersFleetMovement.Direction)
             {
-                _direction *= -1;
-            }
-
-            var movementX = _invadersConfig.HorizontalMovementPerTick * _direction;
-            var movementY = reachedSide ? -_invadersConfig.VerticalMovementPerReachedSide : 0f;
-            var movementVec = new Vector3(movementX, movementY);
-
-            foreach (var row in _invadersRows)
-            {
-                foreach (var invader in row)
+                if (IsReachedTargetShip())
                 {
-                    invader.Position += movementVec;
+                    _reachedPlayerCommand.Execute();
                 }
             }
-
-            if (reachedSide)
-            {
-                CheckIfReachedTarget();
-            }
         }
-
-        private bool IsAnyReachedSide()
+        
+        private void UpdateAttack(float deltaTime)
         {
-            var minX = float.MaxValue;
-            var maxX = float.MinValue;
-
-            foreach (var row in _invadersRows)
-            {
-                foreach (var invader in row)
-                {
-                    var testPosition = invader.Position;
-                    if (testPosition.x < minX)
-                        minX = testPosition.x;
-
-                    if (testPosition.x > maxX)
-                        maxX = testPosition.x;
-                }
-            }
-
-            var isReachAnySide = minX < _movementBounds.min.x ||
-                                 maxX > _movementBounds.max.x;
-            return isReachAnySide;
-        }
-
-        private void CheckIfReachedTarget()
-        {
-            if (IsReachedTargetShip())
-            {
-                _reachedPlayerCommand.Execute();
-            }
+            _invadersFleetAttack.Update(deltaTime);
         }
 
         private bool IsReachedTargetShip()
         {
-            var lastNonEmptyRow = _invadersRows.FindLast(l => l.Count > 0);
+            var lastNonEmptyRow = _state.Rows.FindLast(l => l.Count > 0);
             if (lastNonEmptyRow == null)
                 return false;
 

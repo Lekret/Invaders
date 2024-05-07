@@ -31,7 +31,6 @@ namespace _Project.Scripts.Game.Projectiles
         public Bullet CreateBullet(BulletType bulletType)
         {
             var bullet = new Bullet();
-            
             var bulletViewPrefab = GetBulletViewPrefab(bulletType);
             var bulletView = _instantiator.InstantiatePrefabForComponent<BulletView>(bulletViewPrefab);
             bulletView.Init(bullet);
@@ -55,7 +54,7 @@ namespace _Project.Scripts.Game.Projectiles
             {
                 case BulletType.PlayerBullet:
                     return _playerConfig.BulletViewPrefab;
-                case BulletType.EnemyBullet:
+                case BulletType.InvaderBullet:
                     return _invadersConfig.BulletViewPrefab;
                 default:
                     throw new Exception($"[BulletFactory] Bullet view not found: {bulletType}");

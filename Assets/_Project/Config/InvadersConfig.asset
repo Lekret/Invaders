@@ -16,10 +16,11 @@ MonoBehaviour:
   _countInColumn: 5
   _spawnHorizontalSpacing: 0.8
   _spawnVerticalSpacing: 0.8
-  _minMovementInterval: 0.03
-  _maxMovementInterval: 1
-  _movementTicksToReachSide: 20
+  _minMovementInterval: 0.01
+  _maxMovementInterval: 0.9
   _horizontalMovementPerTick: 0.1
-  _verticalMovementPerReachSide: 0.5
+  _verticalMovementPerReachedSide: 0.5
+  _reachedPlayerToleranceY: 0.5
+  _attackInveral: 3
   _invaderViewPrefab: {fileID: 6453431421973733806, guid: 3d0a8fa5eb0dcc141be5d14545d9a606, type: 3}
   _bulletViewPrefab: {fileID: 2448256251855152609, guid: 1d5e7d490855c9047a8e3e80ed44044e, type: 3}

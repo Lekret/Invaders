@@ -3,6 +3,6 @@
     public enum BulletType
     {
         PlayerBullet,
-        EnemyBullet,
+        InvaderBullet,
     }
 }
