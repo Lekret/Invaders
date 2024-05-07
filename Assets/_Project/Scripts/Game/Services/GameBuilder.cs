@@ -1,54 +1,43 @@
-﻿using _Project.Scripts.Game.Core;
-using _Project.Scripts.Game.Events;
+﻿using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Invaders;
-using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player;
-using _Project.Scripts.Game.Player.View;
-using _Project.Scripts.Game.Projectiles;
 using UniRx;
-using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Game.Services
 {
     public class GameBuilder
     {
-        private readonly IInstantiator _instantiator;
-        private readonly IMessageBroker _messageBroker;
-        private readonly GameConfig _gameConfig;
-        private readonly PlayerConfig _playerConfig;
-        private readonly InvadersConfig _invadersConfig;
-        private readonly BulletFactory _bulletFactory;
-        private readonly GameSceneData _gameSceneData;
-        private readonly CameraProvider _cameraProvider;
+        private readonly IMessagePublisher _messagePublisher;
+        private readonly ShipFactory _shipFactory;
+        private readonly PlayerInputFactory _playerInputFactory;
+        private readonly InvadersFleetFactory _invadersFleetFactory;
 
         public GameBuilder(
-            IInstantiator instantiator,
-            IMessageBroker messageBroker,
-            GameConfig gameConfig,
-            PlayerConfig playerConfig,
-            InvadersConfig invadersConfig,
-            BulletFactory bulletFactory,
-            GameSceneData gameSceneData,
-            CameraProvider cameraProvider)
+            IMessagePublisher messagePublisher,
+            ShipFactory shipFactory, 
+            PlayerInputFactory playerInputFactory,
+            InvadersFleetFactory invadersFleetFactory)
         {
-            _instantiator = instantiator;
-            _messageBroker = messageBroker;
-            _gameConfig = gameConfig;
-            _playerConfig = playerConfig;
-            _invadersConfig = invadersConfig;
-            _bulletFactory = bulletFactory;
-            _gameSceneData = gameSceneData;
-            _cameraProvider = cameraProvider;
+            _messagePublisher = messagePublisher;
+            _shipFactory = shipFactory;
+            _playerInputFactory = playerInputFactory;
+            _invadersFleetFactory = invadersFleetFactory;
         }
 
-        public void CreateGame(GameLoop gameLoop)
+        public void CreateGame()
         {
-            var ship = CreateShip(gameLoop);
-            var playerInput = CreatePlayerInput(gameLoop);
+            var ship = _shipFactory.CreateShip();
+            var playerInput = _playerInputFactory.CreatePlayerInput();
             playerInput.SetInputListener(ship);
-            var invadersFleet = CreateInvadersFleet(gameLoop, ship);
+            
+            var invadersFleet = _invadersFleetFactory.CreateInvadersFleet();
+            invadersFleet.SetTargetShip(ship);
 
+            ListenGameOutcome(ship, invadersFleet);
+        }
+
+        private void ListenGameOutcome(Ship ship, InvadersFleet invadersFleet)
+        {
             var gameOutcomeDisposable = Disposable.Empty;
             gameOutcomeDisposable = Observable
                 .Merge(
@@ -59,93 +48,12 @@ namespace _Project.Scripts.Game.Services
                 .Subscribe(isWin =>
                 {
                     if (isWin)
-                        _messageBroker.Publish(new WinEvent());
+                        _messagePublisher.Publish(new WinEvent());
                     else
-                        _messageBroker.Publish(new LoseEvent());
+                        _messagePublisher.Publish(new LoseEvent());
                     
                     gameOutcomeDisposable.Dispose();
                 });
-        }
-
-        private PlayerInput CreatePlayerInput(GameLoop gameLoop)
-        {
-            var playerInput = new PlayerInput(_messageBroker);
-            gameLoop.Add(playerInput);
-            playerInput.Init();
-            return playerInput;
-        }
-
-        private Ship CreateShip(GameLoop gameLoop)
-        {
-            var ship = new Ship(_bulletFactory, _gameConfig, _gameSceneData.ShipMovementBounds);
-            ship.Health = _playerConfig.ShipHealth;
-            ship.Position = _gameSceneData.ShipSpawnPosition;
-            ship.Speed = _playerConfig.ShipSpeed;
-            ship.AttackCooldown = _playerConfig.AttackCooldown;
-
-            var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
-            shipView.Init(ship);
-            gameLoop.Add(ship);
-
-            ship
-                .HealthAsObservable()
-                .Subscribe(x => _messageBroker.Publish(new ShipHealthChangedEvent(x)))
-                .AddTo(ship.Subscriptions);
-            
-            return ship;
-        }
-
-        private InvadersFleet CreateInvadersFleet(GameLoop gameLoop, Ship ship)
-        {
-            var spawnPosition = _gameSceneData.InvadersFleetSpawnPosition;
-            var spawnOriginX = spawnPosition.x - _invadersConfig.CountInRow / 2f * _invadersConfig.SpawnHorizontalSpacing;
-            var spawnOriginY = spawnPosition.y;
-
-            var invadersFleet = new InvadersFleet(
-                _invadersConfig, 
-                _gameSceneData.InvadersMovementBounds,
-                _bulletFactory);
-
-            for (var x = 0; x < _invadersConfig.CountInRow; x++)
-            {
-                for (var y = 0; y < _invadersConfig.CountInColumn; y++)
-                {
-                    var invader = CreateInvader(gameLoop, rowIndex: y);
-                    var invaderPosition = new Vector3
-                    {
-                        x = spawnOriginX + x * _invadersConfig.SpawnHorizontalSpacing,
-                        y = spawnOriginY - y * _invadersConfig.SpawnVerticalSpacing,
-                        z = 0f
-                    };
-                    invader.Position = invaderPosition;
-                    invadersFleet.AddInvader(invader, rowIndex: y);
-                }
-            }
-
-            gameLoop.Add(invadersFleet);
-            invadersFleet.SetTargetShip(ship);
-            invadersFleet.Init();
-            return invadersFleet;
-        }
-
-        private Invader CreateInvader(GameLoop gameLoop, int rowIndex)
-        {
-            var invader = new Invader();
-            var invaderView = _instantiator.InstantiatePrefabForComponent<InvaderView>(_invadersConfig.InvaderViewPrefab);
-            var skin = _invadersConfig.GetSkinByRow(rowIndex);
-            invaderView.Init(invader, skin);
-
-            invader
-                .DestroyedAsObservable()
-                .Subscribe(_ =>
-                {
-                    gameLoop.Remove(invader);
-                    invaderView.DestroySelf();
-                })
-                .AddTo(invader.Subscriptions);
-
-            gameLoop.Add(invader);
-            return invader;
         }
     }
 }

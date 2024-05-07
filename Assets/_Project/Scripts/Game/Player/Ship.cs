@@ -11,7 +11,6 @@ namespace _Project.Scripts.Game.Player
     public class Ship : IUpdatable, IDisposable, IInputListener
     {
         private readonly BulletFactory _bulletFactory;
-        private readonly GameConfig _gameConfig;
         private readonly Bounds _shipMovementBounds;
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
@@ -26,11 +25,9 @@ namespace _Project.Scripts.Game.Player
         
         public Ship(
             BulletFactory bulletFactory, 
-            GameConfig gameConfig,
             Bounds shipMovementBounds)
         {
             _bulletFactory = bulletFactory;
-            _gameConfig = gameConfig;
             _shipMovementBounds = shipMovementBounds;
         }
         
