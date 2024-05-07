@@ -1,7 +1,5 @@
 ﻿using System;
 using _Project.Scripts.Game.Events;
-using _Project.Scripts.UI;
-using _Project.Scripts.UI.Core;
 using _Project.Scripts.UI.GameOutcome;
 using UniRx;
 using Zenject;
@@ -20,8 +18,10 @@ namespace _Project.Scripts.Game.Services
 
         void IInitializable.Initialize()
         {
-            _messageBroker.Receive<WinEvent>().Subscribe(_ => OnWin()).AddTo(_subscriptions);
-            _messageBroker.Receive<LoseEvent>().Subscribe(_ => OnLose()).AddTo(_subscriptions);
+            _messageBroker
+                .Receive<GameOutcomeEvent>()
+                .Subscribe(e => OnOutcome(e.Type))
+                .AddTo(_subscriptions);
         }
 
         void IDisposable.Dispose()
@@ -29,14 +29,9 @@ namespace _Project.Scripts.Game.Services
             _subscriptions.Dispose();
         }
 
-        private void OnWin()
+        private void OnOutcome(GameOutcomeType outcomeType)
         {
-            _messageBroker.ShowWindow<GameOutcomeWindow>(w => w.ConfigureAsWin());
-        }
-
-        private void OnLose()
-        {
-            _messageBroker.ShowWindow<GameOutcomeWindow>(w => w.ConfigureAsLose());
+            _messageBroker.ShowWindow<GameOutcomeWindow>(w => w.ShowOutcome(outcomeType));
         }
     }
 }

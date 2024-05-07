@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using _Project.Scripts.Game;
+using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Services;
 using _Project.Scripts.UI.Core;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using Zenject;
 
@@ -13,21 +16,19 @@ namespace _Project.Scripts.UI.GameOutcome
     {
         [Inject] private PauseService _pauseService;
         [Inject] private GameRestarter _gameRestarter;
+        [Inject] private PlayerScoreCounter _playerScoreCounter;
 
         [SerializeField] private CanvasGroup _contentCanvasGroup;
+        [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _outcomeStatusText;
         [SerializeField] private Button _restartButton;
 
         private Coroutine _animateContentAlpha;
         
-        public void ConfigureAsWin()
+        public void ShowOutcome(GameOutcomeType outcomeType)
         {
-            _outcomeStatusText.text = "Win!";
-        }
-
-        public void ConfigureAsLose()
-        {
-            _outcomeStatusText.text = "Game Over";
+            _outcomeStatusText.text = outcomeType == GameOutcomeType.Win ? "Win!" : "Game Over";
+            _scoreText.SetText("Score: {0}", _playerScoreCounter.Score);
         }
 
         protected override void OnInit()

@@ -27,6 +27,7 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<GameRestarter>().AsSingle();
             
             Container.Bind<GameBuilder>().AsSingle();
+            Container.Bind<PlayerScoreCounter>().AsSingle();
             Container.BindInterfacesAndSelfTo<PauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
             Container.BindInterfacesTo<GameOutcomeHandler>().AsSingle();

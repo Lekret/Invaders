@@ -11,17 +11,20 @@ namespace _Project.Scripts.Game.Services
         private readonly ShipFactory _shipFactory;
         private readonly PlayerInputFactory _playerInputFactory;
         private readonly InvadersFleetFactory _invadersFleetFactory;
+        private readonly PlayerScoreCounter _playerScoreCounter;
 
         public GameBuilder(
             IMessagePublisher messagePublisher,
             ShipFactory shipFactory, 
             PlayerInputFactory playerInputFactory,
-            InvadersFleetFactory invadersFleetFactory)
+            InvadersFleetFactory invadersFleetFactory, 
+            PlayerScoreCounter playerScoreCounter)
         {
             _messagePublisher = messagePublisher;
             _shipFactory = shipFactory;
             _playerInputFactory = playerInputFactory;
             _invadersFleetFactory = invadersFleetFactory;
+            _playerScoreCounter = playerScoreCounter;
         }
 
         public void CreateGame()
@@ -35,7 +38,7 @@ namespace _Project.Scripts.Game.Services
 
             invadersFleet
                 .InvaderDestroyedAsObservable()
-                .Subscribe(_ => _messagePublisher.Publish(new PlayerScoreChangedEvent(invadersFleet.DestroyedInvadersCount)))
+                .Subscribe(_ => _playerScoreCounter.AddScore(1))
                 .AddTo(invadersFleet.Subscriptions);
             
             ListenGameOutcome(ship, invadersFleet);
@@ -46,16 +49,14 @@ namespace _Project.Scripts.Game.Services
             var gameOutcomeDisposable = Disposable.Empty;
             gameOutcomeDisposable = Observable
                 .Merge(
-                    invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => true),
-                    invadersFleet.ReachedPlayerAsObservable().Select(_ => false),
-                    ship.DiedAsObservable().Select(_ => false))
-                .First()
-                .Subscribe(isWin =>
+                    invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => GameOutcomeType.Win),
+                    invadersFleet.ReachedPlayerAsObservable().Select(_ => GameOutcomeType.Lose),
+                    ship.DiedAsObservable().Select(_ => GameOutcomeType.Lose))
+                .FirstOrDefault()
+                .Subscribe(type =>
                 {
-                    if (isWin)
-                        _messagePublisher.Publish(new WinEvent());
-                    else
-                        _messagePublisher.Publish(new LoseEvent());
+                    if (type != GameOutcomeType.None)
+                        _messagePublisher.Publish(new GameOutcomeEvent(type));
                     
                     gameOutcomeDisposable.Dispose();
                 });

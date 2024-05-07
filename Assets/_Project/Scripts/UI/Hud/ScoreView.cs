@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.Events;
+using _Project.Scripts.Game.Services;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace _Project.Scripts.UI.Hud
 {
     public class ScoreView : MonoBehaviour
     {
-        [Inject] private IMessageReceiver _messageReceiver;
+        [Inject] private PlayerScoreCounter _playerScoreCounter;
 
         [SerializeField] private TextMeshProUGUI _scoreText;
         
@@ -16,10 +17,10 @@ namespace _Project.Scripts.UI.Hud
         
         public void Init()
         {
-            SetScore(0);
-            _messageReceiver
-                .Receive<PlayerScoreChangedEvent>()
-                .Subscribe(e => SetScore(e.NewScore))
+            SetScore(_playerScoreCounter.Score);
+            _playerScoreCounter
+                .ScoreAsObservable()
+                .Subscribe(SetScore)
                 .AddTo(_subscriptions);
         }
 

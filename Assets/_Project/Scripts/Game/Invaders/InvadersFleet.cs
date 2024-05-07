@@ -32,8 +32,6 @@ namespace _Project.Scripts.Game.Invaders
         }
         
         public ICollection<IDisposable> Subscriptions => _subscriptions;
-
-        public int DestroyedInvadersCount => _state.InitialCount - _state.CurrentCount;
         
         public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
         
