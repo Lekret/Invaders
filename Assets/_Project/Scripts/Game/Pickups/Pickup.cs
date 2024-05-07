@@ -56,7 +56,6 @@ namespace _Project.Scripts.Game.Pickups
 
         public void OnHitWithShip(Ship ship)
         {
-            Debug.Log("Collected pickup");
             Destroy();
         }
     }

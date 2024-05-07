@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.Scripts.Game.CoreLoop;
+using _Project.Scripts.Game.Player.Weapon;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
 using UniRx;
@@ -10,24 +11,19 @@ namespace _Project.Scripts.Game.Player
 {
     public class Ship : IUpdatable, IDisposable, IInputListener
     {
-        private readonly BulletFactory _bulletFactory;
         private readonly Bounds _shipMovementBounds;
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
         private readonly ReactiveCommand<Ship> _destroyedCommand = new();
         private readonly ReactiveCommand<int> _healthChangedCommand = new();
-        private bool _inputWantsAttack;
+        private bool _inputAttackRequested;
         private float _inputMovementDelta;
-        private float _attackCooldown;
-        private float _currentAttackCooldown;
         private float _speed;
         private int _health;
+        private IShipWeapon _weapon;
         
-        public Ship(
-            BulletFactory bulletFactory, 
-            Bounds shipMovementBounds)
+        public Ship(Bounds shipMovementBounds)
         {
-            _bulletFactory = bulletFactory;
             _shipMovementBounds = shipMovementBounds;
         }
         
@@ -55,14 +51,13 @@ namespace _Project.Scripts.Game.Player
             set => _speed = value;
         }
 
-        public float AttackCooldown
-        {
-            get => _attackCooldown;
-            set => _attackCooldown = value;
-        }
-
         public ICollection<IDisposable> Subscriptions => _subscriptions;
 
+        public void SetWeapon(IShipWeapon weapon)
+        {
+            _weapon = weapon;
+        }
+        
         public void Dispose()
         {
             _subscriptions.Dispose();
@@ -71,9 +66,9 @@ namespace _Project.Scripts.Game.Player
             _healthChangedCommand.Dispose();
         }
         
-        void IInputListener.OnAttackInput()
+        void IInputListener.OnAttackRequested()
         {
-            _inputWantsAttack = true;
+            _inputAttackRequested = true;
         }
 
         void IInputListener.SetMovementDelta(float movementDelta)
@@ -84,8 +79,7 @@ namespace _Project.Scripts.Game.Player
         void IUpdatable.OnUpdate(float deltaTime)
         {
             Move(deltaTime);
-            UpdateAttackCooldown(deltaTime);
-            HandleAttackInput();
+            HandleAttackInput(deltaTime);
         }
 
         private void Move(float deltaTime)
@@ -96,21 +90,10 @@ namespace _Project.Scripts.Game.Player
             _position.Value = position;
         }
 
-        private void UpdateAttackCooldown(float deltaTime)
+        private void HandleAttackInput(float deltaTime)
         {
-            if (_currentAttackCooldown > 0f)
-                _currentAttackCooldown -= deltaTime;
-        }
-
-        private void HandleAttackInput()
-        {
-            if (_inputWantsAttack && _currentAttackCooldown <= 0f)
-            {
-                _currentAttackCooldown = _attackCooldown;
-                _bulletFactory.CreateBullet(_position.Value, Team.Player);
-            }
-            
-            _inputWantsAttack = false;
+            _weapon.Update(deltaTime, _inputAttackRequested);
+            _inputAttackRequested = false;
         }
 
         public void ApplyDamage()

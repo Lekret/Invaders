@@ -28,7 +28,7 @@ namespace _Project.Scripts.Game.Projectiles
             _invadersConfig = invadersConfig;
         }
 
-        public Bullet CreateBullet(Vector3 position, Team team)
+        public Bullet CreateBullet(Vector3 position, Vector2 direction, Team team)
         {
             var bullet = new Bullet();
             bullet.Position = position;
@@ -39,12 +39,12 @@ namespace _Project.Scripts.Game.Projectiles
                 case Team.Player:
                     viewPrefab = _playerConfig.BulletViewPrefab;
                     bullet.Team = Team.Player;
-                    bullet.Velocity = Vector2.up * _playerConfig.BulletSpeed;
+                    bullet.Velocity = direction * _playerConfig.BulletSpeed;
                     break;
                 case Team.Invaders:
                     viewPrefab = _invadersConfig.BulletViewPrefab;
                     bullet.Team = Team.Invaders;
-                    bullet.Velocity = Vector2.down * _invadersConfig.BulletSpeed;
+                    bullet.Velocity = direction * _invadersConfig.BulletSpeed;
                     break;
                 default:
                     Debug.LogError(team);

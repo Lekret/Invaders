@@ -44,19 +44,18 @@ namespace _Project.Scripts.Game.Player
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            var movementDelta = ReadMovementDeltaInput();
-            var wantsAttack = ReadWantsAttackInput();
-
-            if (_inputListener != null)
-            {
-                _inputListener.SetMovementDelta(movementDelta);
+            if (_inputListener == null) 
+                return;
+            
+            var movementDelta = GetMovementDelta();
+            _inputListener.SetMovementDelta(movementDelta);
                 
-                if (wantsAttack)
-                    _inputListener.OnAttackInput();
-            }
+            var isAttackRequested = IsAttackRequested();
+            if (isAttackRequested)
+                _inputListener.OnAttackRequested();
         }
 
-        private float ReadMovementDeltaInput()
+        private float GetMovementDelta()
         {
             var kbInput = Input.GetAxisRaw("Horizontal");
             var movementDelta = kbInput + _uiInputDelta;
@@ -64,7 +63,7 @@ namespace _Project.Scripts.Game.Player
             return movementDelta;
         }
 
-        private bool ReadWantsAttackInput()
+        private bool IsAttackRequested()
         {
             var wantsAttack = _isUiAttackPressed || Input.GetKey(KeyCode.Space);
             return wantsAttack;

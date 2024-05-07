@@ -2,7 +2,7 @@
 {
     public interface IInputListener
     {
-        void OnAttackInput();
+        void OnAttackRequested();
         void SetMovementDelta(float movementDelta);
     }
 }

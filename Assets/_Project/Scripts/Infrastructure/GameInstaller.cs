@@ -3,6 +3,7 @@ using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Pickups;
 using _Project.Scripts.Game.Player;
+using _Project.Scripts.Game.Player.Weapon;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
 using UnityEngine;
@@ -60,6 +61,7 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<ShipFactory>().AsSingle();
             Container.Bind<ShipProvider>().AsSingle();
+            Container.Bind<ShipWeaponFactory>().AsSingle();
         }
 
         private void BindInvaders()
