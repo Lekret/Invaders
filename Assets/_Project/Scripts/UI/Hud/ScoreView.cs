@@ -1,5 +1,4 @@
-﻿using _Project.Scripts.Game.Events;
-using _Project.Scripts.Game.Services;
+﻿using _Project.Scripts.Game.Services;
 using TMPro;
 using UniRx;
 using UnityEngine;

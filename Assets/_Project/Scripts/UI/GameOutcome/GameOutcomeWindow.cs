@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using _Project.Scripts.Game;
-using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Services;
 using _Project.Scripts.UI.Core;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using Zenject;
 
