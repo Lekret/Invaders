@@ -1,7 +1,8 @@
 ﻿using System;
+using _Project.Scripts.UI.Core;
 using UniRx;
 
-namespace _Project.Scripts.UI.Core
+namespace _Project.Scripts.Events
 {
     public readonly struct UiWindowEvent
     {

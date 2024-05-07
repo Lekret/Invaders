@@ -5,7 +5,7 @@ using _Project.Scripts.UI.Core;
 using UniRx;
 using Zenject;
 
-namespace _Project.Scripts.Game
+namespace _Project.Scripts.Game.Services
 {
     public class GameOutcomeHandler : IInitializable, IDisposable
     {
@@ -25,7 +25,7 @@ namespace _Project.Scripts.Game
 
         void IDisposable.Dispose()
         {
-            
+            _subscriptions.Dispose();
         }
 
         private void OnWin()

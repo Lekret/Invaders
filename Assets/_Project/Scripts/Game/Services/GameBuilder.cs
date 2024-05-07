@@ -1,18 +1,15 @@
-﻿using System;
-using _Project.Scripts.Events;
+﻿using _Project.Scripts.Events;
 using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Player.View;
 using _Project.Scripts.Game.Projectiles;
-using _Project.Scripts.Game.Services;
-using _Project.Scripts.Services;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Game
+namespace _Project.Scripts.Game.Services
 {
     public class GameBuilder
     {

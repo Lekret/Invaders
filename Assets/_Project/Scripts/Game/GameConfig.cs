@@ -1,6 +1,4 @@
-﻿using _Project.Scripts.Game.Projectiles;
-using _Project.Scripts.Game.Projectiles.View;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _Project.Scripts.Game
 {
