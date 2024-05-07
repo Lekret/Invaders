@@ -1,7 +1,8 @@
 ﻿using System;
-using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Events;
 using _Project.Scripts.UI;
+using _Project.Scripts.UI.Hud;
 using UniRx;
 using UnityEngine;
 using Zenject;

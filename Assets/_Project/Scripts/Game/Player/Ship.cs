@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
 using UniRx;
@@ -14,7 +14,7 @@ namespace _Project.Scripts.Game.Player
         private readonly Bounds _shipMovementBounds;
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Vector3ReactiveProperty _position = new();
-        private readonly ReactiveCommand<Ship> _diedCommand = new();
+        private readonly ReactiveCommand<Ship> _destroyedCommand = new();
         private readonly ReactiveCommand<int> _healthChangedCommand = new();
         private bool _inputWantsAttack;
         private float _inputMovementDelta;
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Game.Player
         
         public IObservable<int> HealthAsObservable() => _healthChangedCommand;
 
-        public IObservable<Ship> DiedAsObservable() => _diedCommand;
+        public IObservable<Ship> DiedAsObservable() => _destroyedCommand;
         
         public int Health
         {
@@ -65,7 +65,10 @@ namespace _Project.Scripts.Game.Player
 
         public void Dispose()
         {
+            _subscriptions.Dispose();
             _position.Dispose();
+            _destroyedCommand.Dispose();
+            _healthChangedCommand.Dispose();
         }
         
         void IInputListener.OnAttackInput()
@@ -122,7 +125,7 @@ namespace _Project.Scripts.Game.Player
             _healthChangedCommand.Execute(_health);
             
             if (_health <= 0)
-                _diedCommand.Execute(this);
+                _destroyedCommand.Execute(this);
         }
     }
 }

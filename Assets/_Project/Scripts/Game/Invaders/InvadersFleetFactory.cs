@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Game.Core;
+﻿using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Projectiles;
 using UniRx;

@@ -33,6 +33,11 @@ namespace _Project.Scripts.Game.Services
             var invadersFleet = _invadersFleetFactory.CreateInvadersFleet();
             invadersFleet.SetTargetShip(ship);
 
+            invadersFleet
+                .InvaderDestroyedAsObservable()
+                .Subscribe(_ => _messagePublisher.Publish(new PlayerScoreChangedEvent(invadersFleet.DestroyedInvadersCount)))
+                .AddTo(invadersFleet.Subscriptions);
+            
             ListenGameOutcome(ship, invadersFleet);
         }
 

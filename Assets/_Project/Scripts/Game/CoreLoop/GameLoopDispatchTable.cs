@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Core
+namespace _Project.Scripts.Game.CoreLoop
 {
     public class GameLoopDispatchTable<T>
     {

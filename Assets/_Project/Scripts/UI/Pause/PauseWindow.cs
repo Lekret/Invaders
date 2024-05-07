@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.Pause
 {
     public class PauseWindow : UiWindow
     {

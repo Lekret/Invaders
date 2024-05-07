@@ -1,5 +1,5 @@
 using _Project.Scripts.Game;
-using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles;
@@ -27,13 +27,16 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<GameRestarter>().AsSingle();
             
             Container.Bind<GameBuilder>().AsSingle();
-            Container.Bind<PauseService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
             Container.BindInterfacesTo<GameOutcomeHandler>().AsSingle();
             
-            Container.Bind<BulletFactory>().AsSingle();
-
             Container.BindInterfacesAndSelfTo<GameLoop>().AsSingle();
+
+            Container.Bind<PlayerInputFactory>().AsSingle();
+            Container.Bind<ShipFactory>().AsSingle();
+            Container.Bind<InvadersFleetFactory>().AsSingle();
+            Container.Bind<BulletFactory>().AsSingle();
         }
     }
 }

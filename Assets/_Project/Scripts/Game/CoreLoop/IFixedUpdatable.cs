@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Game.Core
+﻿namespace _Project.Scripts.Game.CoreLoop
 {
     public interface IFixedUpdatable
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Game.Core
+namespace _Project.Scripts.Game.CoreLoop
 {
     public class GameLoop : IDisposable, ITickable, ILateTickable, IFixedTickable
     {

@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.Hud
 {
-    public class HealthBar : MonoBehaviour
+    public class HealthBarView : MonoBehaviour
     {
         [Inject] private IMessageReceiver _messageReceiver;
 
@@ -23,6 +23,11 @@ namespace _Project.Scripts.UI
                 .AddTo(_subscriptions);
         }
 
+        public void Dispose()
+        {
+            _subscriptions.Dispose();
+        }
+
         private void OnShipHealthChanged(ShipHealthChangedEvent e)
         {
             if (e.CurrentValue >= _spritePerHealth.Length)
@@ -32,11 +37,6 @@ namespace _Project.Scripts.UI
             }
             
             _healthImage.sprite = _spritePerHealth[e.CurrentValue];
-        }
-
-        public void Dispose()
-        {
-            _subscriptions.Dispose();
         }
     }
 }

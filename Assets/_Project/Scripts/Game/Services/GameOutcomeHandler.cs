@@ -2,6 +2,7 @@
 using _Project.Scripts.Game.Events;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Core;
+using _Project.Scripts.UI.GameOutcome;
 using UniRx;
 using Zenject;
 

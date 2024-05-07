@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.Scripts.Game.Core;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
 using UniRx;

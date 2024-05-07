@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Game.Core;
+﻿using _Project.Scripts.Game.CoreLoop;
 using UniRx;
 
 namespace _Project.Scripts.Game.Player
@@ -6,16 +6,19 @@ namespace _Project.Scripts.Game.Player
     public class PlayerInputFactory
     {
         private readonly GameLoop _gameLoop;
-        private readonly IMessageBroker _messageBroker;
+        private readonly IMessageReceiver _messageReceiver;
 
-        public PlayerInputFactory(GameLoop gameLoop)
+        public PlayerInputFactory(
+            GameLoop gameLoop, 
+            IMessageReceiver messageReceiver)
         {
             _gameLoop = gameLoop;
+            _messageReceiver = messageReceiver;
         }
 
         public PlayerInput CreatePlayerInput()
         {
-            var playerInput = new PlayerInput(_messageBroker);
+            var playerInput = new PlayerInput(_messageReceiver);
             _gameLoop.Add(playerInput);
             playerInput.Init();
             return playerInput;

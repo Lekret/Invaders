@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Game.Core;
+﻿using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Player.View;
 using _Project.Scripts.Game.Projectiles;
@@ -48,7 +48,7 @@ namespace _Project.Scripts.Game.Player
                 .HealthAsObservable()
                 .Subscribe(x => _messagePublisher.Publish(new ShipHealthChangedEvent(x)))
                 .AddTo(ship.Subscriptions);
-            
+
             return ship;
         }
     }

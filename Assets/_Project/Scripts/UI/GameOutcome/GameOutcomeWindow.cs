@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.GameOutcome
 {
     public class GameOutcomeWindow : UiWindow
     {

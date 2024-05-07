@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Game.Core;
+using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Projectiles;
 using UniRx;
@@ -12,6 +12,7 @@ namespace _Project.Scripts.Game.Invaders
     public class InvadersFleet : IDisposable, IUpdatable
     {
         private readonly CompositeDisposable _subscriptions = new();
+        private readonly ReactiveCommand<Invader> _invaderDestroyedCommand = new();
         private readonly ReactiveCommand _allInvadersDestroyedCommand = new();
         private readonly ReactiveCommand _reachedPlayerCommand = new();
         private readonly InvadersFleetState _state = new();
@@ -29,11 +30,17 @@ namespace _Project.Scripts.Game.Invaders
             _invadersFleetMovement = new InvadersFleetMovement(_invadersConfig, _state, movementBounds);
             _invadersFleetAttack = new InvadersFleetAttack(_invadersConfig, _state, bulletFactory);
         }
+        
+        public ICollection<IDisposable> Subscriptions => _subscriptions;
 
+        public int DestroyedInvadersCount => _state.InitialCount - _state.CurrentCount;
+        
+        public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
+        
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
 
         public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
-
+        
         public void SetTargetShip(Ship targetShip)
         {
             _targetShip = targetShip;
@@ -73,6 +80,7 @@ namespace _Project.Scripts.Game.Invaders
             var row = _state.Rows[rowIndex];
             row.Remove(invader);
             _state.CurrentCount--;
+            _invaderDestroyedCommand.Execute(invader);
             if (_state.CurrentCount <= 0)
                 _allInvadersDestroyedCommand.Execute();
         }
@@ -82,6 +90,7 @@ namespace _Project.Scripts.Game.Invaders
             _subscriptions.Dispose();
             _reachedPlayerCommand.Dispose();
             _allInvadersDestroyedCommand.Dispose();
+            _invaderDestroyedCommand.Dispose();
         }
 
         void IUpdatable.OnUpdate(float deltaTime)

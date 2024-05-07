@@ -1,18 +1,20 @@
 ﻿using _Project.Scripts.Game.Events;
 using _Project.Scripts.UI.Core;
+using _Project.Scripts.UI.Pause;
 using _Project.Scripts.UI.Utils;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.Hud
 {
     public class HudWindow : UiWindow
     {
         [Inject] private IMessagePublisher _messagePublisher;
 
-        [SerializeField] private HealthBar _healthBar;
+        [SerializeField] private HealthBarView _healthBarView;
+        [SerializeField] private ScoreView _scoreView;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private TouchButton _attackButton;
         [SerializeField] private TouchButton _moveLeftButton;
@@ -22,7 +24,8 @@ namespace _Project.Scripts.UI
 
         protected override void OnInit()
         {
-            _healthBar.Init();
+            _healthBarView.Init();
+            _scoreView.Init();
             
             _attackButton
                 .OnPointerDownAsObservable()
@@ -69,7 +72,8 @@ namespace _Project.Scripts.UI
 
         protected override void OnDisposed()
         {
-            _healthBar.Dispose();
+            _healthBarView.Dispose();
+            _scoreView.Dispose();
             _subscriptions.Dispose();
         }
     }

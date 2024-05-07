@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Game.Services
 {
-    public class PauseService
+    public class PauseService : IDisposable
     {
         private readonly HashSet<object> _pauseDemanders = new();
         private readonly ReactiveCommand<bool> _pauseChangedCommand = new();
@@ -30,6 +30,11 @@ namespace _Project.Scripts.Game.Services
         {
             Debug.Log($"[PauseService] Pause changed: {IsPaused}");
             _pauseChangedCommand.Execute(IsPaused);
+        }
+
+        void IDisposable.Dispose()
+        {
+            _pauseChangedCommand.Dispose();
         }
     }
 }
