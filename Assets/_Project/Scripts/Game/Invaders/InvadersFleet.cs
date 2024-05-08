@@ -64,6 +64,7 @@ namespace _Project.Scripts.Game.Invaders
             _state.InitialCount = _state.Rows.Sum(x => x.Count);
             _state.CurrentCount = _state.InitialCount;
 
+            _subscriptions.Clear();
             for (var rowIndex = 0; rowIndex < _state.Rows.Count; rowIndex++)
             {
                 var row = _state.Rows[rowIndex];

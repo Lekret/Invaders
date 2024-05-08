@@ -1,14 +1,16 @@
-﻿using _Project.Scripts.Game.Events;
+﻿using System;
+using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Pickups;
 using _Project.Scripts.Game.Player;
 using UniRx;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Game.Services
 {
-    public class GameBuilder
+    public class GameBuilder : IDisposable
     {
+        private readonly CompositeDisposable _subscriptions = new();
         private readonly IMessagePublisher _messagePublisher;
         private readonly ShipFactory _shipFactory;
         private readonly PlayerInputFactory _playerInputFactory;
@@ -18,7 +20,7 @@ namespace _Project.Scripts.Game.Services
         private readonly InvadersFleetProvider _invadersFleetProvider;
         private readonly PickupFactory _pickupFactory;
         private readonly PickupsConfig _pickupsConfig;
-        
+
         public GameBuilder(
             IMessagePublisher messagePublisher,
             ShipFactory shipFactory, 
@@ -69,20 +71,22 @@ namespace _Project.Scripts.Game.Services
 
         private void ListenGameOutcome(Ship ship, InvadersFleet invadersFleet)
         {
-            var gameOutcomeDisposable = Disposable.Empty;
-            gameOutcomeDisposable = Observable
+            Observable
                 .Merge(
                     invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => GameOutcomeType.Win),
                     invadersFleet.ReachedPlayerAsObservable().Select(_ => GameOutcomeType.Lose),
                     ship.DiedAsObservable().Select(_ => GameOutcomeType.Lose))
-                .FirstOrDefault()
                 .Subscribe(type =>
                 {
                     if (type != GameOutcomeType.None)
                         _messagePublisher.Publish(new GameOutcomeEvent(type));
-                    
-                    gameOutcomeDisposable.Dispose();
-                });
+                })
+                .AddTo(_subscriptions);
+        }
+
+        public void Dispose()
+        {
+            _subscriptions.Dispose();
         }
     }
 }
