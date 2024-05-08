@@ -57,7 +57,7 @@ namespace _Project.Scripts.Game.Services
             invadersFleet
                 .InvaderDestroyedAsObservable()
                 .Subscribe(OnInvaderDied)
-                .AddTo(invadersFleet.Subscriptions);
+                .AddTo(_subscriptions);
             
             ListenGameOutcome(ship, invadersFleet);
         }

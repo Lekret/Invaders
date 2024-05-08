@@ -13,7 +13,7 @@ namespace _Project.Scripts.Game.Invaders
 {
     public class InvadersFleet : IDisposable, IUpdatable
     {
-        private readonly CompositeDisposable _subscriptions = new();
+        private readonly CompositeDisposable _invaderSubscriptions = new();
         private readonly ReactiveCommand<Invader> _invaderDestroyedCommand = new();
         private readonly ReactiveCommand _allInvadersDestroyedCommand = new();
         private readonly ReactiveCommand _reachedPlayerCommand = new();
@@ -32,9 +32,7 @@ namespace _Project.Scripts.Game.Invaders
             _invadersFleetMovement = new InvadersFleetMovement(_invadersConfig, _state, movementBounds);
             _invadersFleetAttack = new InvadersFleetAttack(_invadersConfig, _state, bulletFactory);
         }
-
-        public ICollection<IDisposable> Subscriptions => _subscriptions;
-
+        
         public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
 
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
@@ -65,7 +63,7 @@ namespace _Project.Scripts.Game.Invaders
             _state.InitialCount = _state.Rows.Sum(x => x.Count);
             _state.CurrentCount = _state.InitialCount;
 
-            _subscriptions.Clear();
+            _invaderSubscriptions.Clear();
             for (var rowIndex = 0; rowIndex < _state.Rows.Count; rowIndex++)
             {
                 var row = _state.Rows[rowIndex];
@@ -76,7 +74,7 @@ namespace _Project.Scripts.Game.Invaders
                     invader
                         .DestroyedAsObservable()
                         .Subscribe(inv => OnInvaderDestroyed(inv, rowIndexCopy))
-                        .AddTo(_subscriptions);
+                        .AddTo(_invaderSubscriptions);
                 }
             }
         }
@@ -96,7 +94,7 @@ namespace _Project.Scripts.Game.Invaders
 
         void IDisposable.Dispose()
         {
-            _subscriptions.Dispose();
+            _invaderSubscriptions.Dispose();
             _reachedPlayerCommand.Dispose();
             _allInvadersDestroyedCommand.Dispose();
             _invaderDestroyedCommand.Dispose();
