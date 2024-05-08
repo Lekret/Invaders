@@ -76,6 +76,7 @@ namespace _Project.Scripts.Game.Services
                     invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => GameOutcomeType.Win),
                     invadersFleet.ReachedPlayerAsObservable().Select(_ => GameOutcomeType.Lose),
                     ship.DiedAsObservable().Select(_ => GameOutcomeType.Lose))
+                .DelayFrame(1, FrameCountType.EndOfFrame)
                 .Subscribe(type =>
                 {
                     if (type != GameOutcomeType.None)
