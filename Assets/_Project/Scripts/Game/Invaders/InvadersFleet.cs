@@ -7,6 +7,7 @@ using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Projectiles.Bullets;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace _Project.Scripts.Game.Invaders
 {
@@ -31,11 +32,11 @@ namespace _Project.Scripts.Game.Invaders
             _invadersFleetMovement = new InvadersFleetMovement(_invadersConfig, _state, movementBounds);
             _invadersFleetAttack = new InvadersFleetAttack(_invadersConfig, _state, bulletFactory);
         }
-        
+
         public ICollection<IDisposable> Subscriptions => _subscriptions;
 
         public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
-        
+
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
 
         public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
@@ -44,7 +45,7 @@ namespace _Project.Scripts.Game.Invaders
         {
             _invadersFleetAttack.SetAttackSpeedMultiplier(multiplier);
         }
-        
+
         public void SetTargetShip(Ship targetShip)
         {
             _targetShip = targetShip;
@@ -87,7 +88,10 @@ namespace _Project.Scripts.Game.Invaders
             _state.CurrentCount--;
             _invaderDestroyedCommand.Execute(invader);
             if (_state.CurrentCount <= 0)
+            {
+                Assert.IsTrue(_state.Rows.Any(r => r.Count == 0));
                 _allInvadersDestroyedCommand.Execute();
+            }
         }
 
         void IDisposable.Dispose()
@@ -117,7 +121,7 @@ namespace _Project.Scripts.Game.Invaders
                 }
             }
         }
-        
+
         private void UpdateAttack(float deltaTime)
         {
             _invadersFleetAttack.Update(deltaTime);
