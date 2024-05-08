@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using _Project.Scripts.Game.Invaders.View;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -41,6 +42,14 @@ namespace _Project.Scripts.Game.Player.View
             _subscriptions.AddTo(gameObject);
         }
 
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.TryGetComponent(out InvaderView invaderView))
+            {
+                _ship.OnHitWithInvader(invaderView.Invader);
+            }
+        }
+
         private void LateUpdate()
         {
             var position = transform.position;
@@ -58,7 +67,6 @@ namespace _Project.Scripts.Game.Player.View
 
             var targetRotation = Quaternion.Euler(0f, 0f, targetRotationZ);
             _spriteRoot.localRotation = Quaternion.Lerp(_spriteRoot.localRotation, targetRotation, Time.deltaTime * 8f);
-
         }
     }
 }

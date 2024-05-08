@@ -52,7 +52,6 @@ namespace _Project.Scripts.Game.Services
             
             var invadersFleet = _invadersFleetFactory.CreateInvadersFleet();
             _invadersFleetProvider.Init(invadersFleet);
-            invadersFleet.SetTargetShip(ship);
 
             invadersFleet
                 .InvaderDestroyedAsObservable()
@@ -74,7 +73,7 @@ namespace _Project.Scripts.Game.Services
             Observable
                 .Merge(
                     invadersFleet.AllInvadersDestroyedAsObservable().Select(_ => GameOutcomeType.Win),
-                    invadersFleet.ReachedPlayerAsObservable().Select(_ => GameOutcomeType.Lose),
+                    invadersFleet.ReachedBottomAsObservable().Select(_ => GameOutcomeType.Lose),
                     ship.DiedAsObservable().Select(_ => GameOutcomeType.Lose))
                 .DelayFrame(1, FrameCountType.EndOfFrame)
                 .Subscribe(type =>

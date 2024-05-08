@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.Scripts.Game.CoreLoop;
+using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player.Weapon;
 using _Project.Scripts.Game.Projectiles;
 using _Project.Scripts.Game.Services;
@@ -71,6 +72,12 @@ namespace _Project.Scripts.Game.Player
 
         public ICollection<IDisposable> Subscriptions => _subscriptions;
 
+        public void OnHitWithInvader(Invader invader)
+        {
+            ApplyDamage();
+            invader.ApplyDamage();
+        }
+        
         public void Dispose()
         {
             _subscriptions.Dispose();

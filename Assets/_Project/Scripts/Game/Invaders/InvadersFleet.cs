@@ -16,37 +16,31 @@ namespace _Project.Scripts.Game.Invaders
         private readonly CompositeDisposable _invaderSubscriptions = new();
         private readonly ReactiveCommand<Invader> _invaderDestroyedCommand = new();
         private readonly ReactiveCommand _allInvadersDestroyedCommand = new();
-        private readonly ReactiveCommand _reachedPlayerCommand = new();
+        private readonly ReactiveCommand _reachedBottomCommand = new();
         private readonly InvadersFleetState _state = new();
-        private readonly InvadersConfig _invadersConfig;
         private readonly InvadersFleetMovement _invadersFleetMovement;
         private readonly InvadersFleetAttack _invadersFleetAttack;
-        private Ship _targetShip;
+        private readonly Bounds _movementBounds;
 
         public InvadersFleet(
             InvadersConfig invadersConfig,
             Bounds movementBounds,
             BulletFactory bulletFactory)
         {
-            _invadersConfig = invadersConfig;
-            _invadersFleetMovement = new InvadersFleetMovement(_invadersConfig, _state, movementBounds);
-            _invadersFleetAttack = new InvadersFleetAttack(_invadersConfig, _state, bulletFactory);
+            _movementBounds = movementBounds;
+            _invadersFleetMovement = new InvadersFleetMovement(invadersConfig, _state, movementBounds);
+            _invadersFleetAttack = new InvadersFleetAttack(invadersConfig, _state, bulletFactory);
         }
         
         public IObservable<Invader> InvaderDestroyedAsObservable() => _invaderDestroyedCommand;
 
         public IObservable<Unit> AllInvadersDestroyedAsObservable() => _allInvadersDestroyedCommand;
 
-        public IObservable<Unit> ReachedPlayerAsObservable() => _reachedPlayerCommand;
+        public IObservable<Unit> ReachedBottomAsObservable() => _reachedBottomCommand;
 
         public void SetAttackSpeedMultiplier(float multiplier)
         {
             _invadersFleetAttack.SetAttackSpeedMultiplier(multiplier);
-        }
-
-        public void SetTargetShip(Ship targetShip)
-        {
-            _targetShip = targetShip;
         }
 
         public void AddInvader(Invader invader, int rowIndex)
@@ -95,7 +89,7 @@ namespace _Project.Scripts.Game.Invaders
         void IDisposable.Dispose()
         {
             _invaderSubscriptions.Dispose();
-            _reachedPlayerCommand.Dispose();
+            _reachedBottomCommand.Dispose();
             _allInvadersDestroyedCommand.Dispose();
             _invaderDestroyedCommand.Dispose();
         }
@@ -110,9 +104,9 @@ namespace _Project.Scripts.Game.Invaders
         {
             _invadersFleetMovement.Update(deltaTime);
 
-            if (IsReachedTargetShip())
+            if (IsReachedBottom())
             {
-                _reachedPlayerCommand.Execute();
+                _reachedBottomCommand.Execute();
             }
         }
 
@@ -121,16 +115,15 @@ namespace _Project.Scripts.Game.Invaders
             _invadersFleetAttack.Update(deltaTime);
         }
 
-        private bool IsReachedTargetShip()
+        private bool IsReachedBottom()
         {
             var lastNonEmptyRow = _state.Rows.FindLast(l => l.Count > 0);
             if (lastNonEmptyRow == null)
                 return false;
 
             var invaderFromLastRow = lastNonEmptyRow[0];
-            var yDistToShip = invaderFromLastRow.Position.y - _targetShip.Position.y;
-            var isReachedTarget = yDistToShip <= _invadersConfig.ReachedPlayerToleranceY;
-            return isReachedTarget;
+            var isReachedBottom = invaderFromLastRow.Position.y < _movementBounds.min.y;
+            return isReachedBottom;
         }
     }
 }

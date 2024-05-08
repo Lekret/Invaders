@@ -17,7 +17,6 @@ namespace _Project.Scripts.Game.Invaders
         [SerializeField] private float _maxMovementInterval = 2f;
         [SerializeField] private float _horizontalMovementPerTick = 0.1f;
         [SerializeField] private float _verticalMovementPerReachedSide = 0.5f;
-        [SerializeField] private float _reachedPlayerToleranceY = 0.5f;
         [Header("Attack")] 
         [SerializeField] private float _attackInterval = 3f;
         [SerializeField] private float _bulletSpeed = 5f;
@@ -36,7 +35,6 @@ namespace _Project.Scripts.Game.Invaders
         public float MaxMovementInterval => _maxMovementInterval;
         public float HorizontalMovementPerTick => _horizontalMovementPerTick;
         public float VerticalMovementPerReachedSide => _verticalMovementPerReachedSide;
-        public float ReachedPlayerToleranceY => _reachedPlayerToleranceY;
 
         public float AttackInterval => _attackInterval;
         public float BulletSpeed => _bulletSpeed;
