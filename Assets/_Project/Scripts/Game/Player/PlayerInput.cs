@@ -12,7 +12,7 @@ namespace _Project.Scripts.Game.Player
         private readonly IMessageReceiver _messageReceiver;
         private IInputListener _inputListener;
         private bool _isUiAttackPressed;
-        private float _uiInputDelta;
+        private Vector2 _uiInputDelta;
 
         public PlayerInput(IMessageReceiver messageReceiver)
         {
@@ -55,11 +55,11 @@ namespace _Project.Scripts.Game.Player
                 _inputListener.OnAttackRequested();
         }
 
-        private float GetMovementDelta()
+        private Vector2 GetMovementDelta()
         {
-            var kbInput = Input.GetAxisRaw("Horizontal");
+            var kbInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             var movementDelta = kbInput + _uiInputDelta;
-            movementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
+            movementDelta = Vector2.ClampMagnitude(movementDelta, 1f);
             return movementDelta;
         }
 

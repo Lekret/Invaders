@@ -1,10 +1,12 @@
-﻿namespace _Project.Scripts.Game.Events
+﻿using UnityEngine;
+
+namespace _Project.Scripts.Game.Events
 {
     public readonly struct UiMovementInputEvent
     {
-        public readonly float Delta;
+        public readonly Vector2 Delta;
 
-        public UiMovementInputEvent(float delta)
+        public UiMovementInputEvent(Vector2 delta)
         {
             Delta = delta;
         }

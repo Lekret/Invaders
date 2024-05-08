@@ -19,9 +19,7 @@ namespace _Project.Scripts.Game.Invaders
             _state = state;
             _movementBounds = movementBounds;
         }
-
-        public int Direction => _direction;
-
+        
         public void Update(float deltaTime)
         {
             if (_timeUntilMovement > 0f)

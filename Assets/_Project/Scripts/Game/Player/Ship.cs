@@ -17,7 +17,7 @@ namespace _Project.Scripts.Game.Player
         private readonly ReactiveCommand<Ship> _destroyedCommand = new();
         private readonly ReactiveCommand<int> _healthChangedCommand = new();
         private bool _inputAttackRequested;
-        private float _inputMovementDelta;
+        private Vector2 _inputMovementDelta;
         private float _speed;
         private int _health;
         private IShipWeapon _defaultWeapon;
@@ -84,9 +84,9 @@ namespace _Project.Scripts.Game.Player
             _inputAttackRequested = true;
         }
 
-        void IInputListener.SetMovementDelta(float movementDelta)
+        void IInputListener.SetMovementDelta(Vector2 movementDelta)
         {
-            _inputMovementDelta = Mathf.Clamp(movementDelta, -1f, 1f);
+            _inputMovementDelta = movementDelta;
         }
 
         void IUpdatable.OnUpdate(float deltaTime)
@@ -110,8 +110,9 @@ namespace _Project.Scripts.Game.Player
         private void UpdateMovement(float deltaTime)
         {
             var position = _position.Value;
-            position.x += _inputMovementDelta * _speed * deltaTime;
+            position += (Vector3) _inputMovementDelta * (_speed * deltaTime);
             position.x = Mathf.Clamp(position.x, _shipMovementBounds.min.x, _shipMovementBounds.max.x);
+            position.y = Mathf.Clamp(position.y, _shipMovementBounds.min.y, _shipMovementBounds.max.y);
             _position.Value = position;
         }
 

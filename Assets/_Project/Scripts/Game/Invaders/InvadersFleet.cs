@@ -110,15 +110,11 @@ namespace _Project.Scripts.Game.Invaders
 
         private void UpdateMovement(float deltaTime)
         {
-            var direction = _invadersFleetMovement.Direction;
             _invadersFleetMovement.Update(deltaTime);
 
-            if (direction != _invadersFleetMovement.Direction)
+            if (IsReachedTargetShip())
             {
-                if (IsReachedTargetShip())
-                {
-                    _reachedPlayerCommand.Execute();
-                }
+                _reachedPlayerCommand.Execute();
             }
         }
 
