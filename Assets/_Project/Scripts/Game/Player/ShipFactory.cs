@@ -39,7 +39,7 @@ namespace _Project.Scripts.Game.Player
             ship.Health = _playerConfig.ShipHealth;
             ship.Position = _gameSceneData.ShipSpawnPosition;
             ship.Speed = _playerConfig.ShipSpeed;
-            ship.SetWeapon(_shipWeaponFactory.CreateBulletWeapon());
+            ship.DefaultWeapon = _shipWeaponFactory.CreateRifle();
 
             var shipView = _instantiator.InstantiatePrefabForComponent<ShipView>(_playerConfig.ShipViewPrefab);
             shipView.Init(ship);

@@ -9,13 +9,15 @@ namespace _Project.Scripts.Game.Player
     {
         [SerializeField] private int _shipHealth = 5;
         [SerializeField] private float _shipSpeed = 3f;
-        [SerializeField] private float _bulletSpeed = 5f;
+        [SerializeField] private float _rifleBulletSpeed = 5f;
+        [SerializeField] private float _rifleAttackInterval = 0.5f;
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private BulletView _bulletViewPrefab;
 
         public int ShipHealth => _shipHealth;
         public float ShipSpeed => _shipSpeed;
-        public float BulletSpeed => _bulletSpeed;
+        public float RifleBulletSpeed => _rifleBulletSpeed;
+        public float RifleAttackInterval => _rifleAttackInterval;
         public ShipView ShipViewPrefab => _shipViewPrefab;
         public BulletView BulletViewPrefab => _bulletViewPrefab;
     }

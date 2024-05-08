@@ -1,6 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Game.Events;
 using _Project.Scripts.Game.Invaders;
+using _Project.Scripts.Game.Player;
 using _Project.Scripts.UI.GameOutcome;
 using UniRx;
 using UnityEngine;
@@ -14,16 +15,19 @@ namespace _Project.Scripts.Game.Services
         private readonly IMessageBroker _messageBroker;
         private readonly InvadersFleetProvider _invadersFleetProvider;
         private readonly InvadersFleetFactory _invadersFleetFactory;
+        private readonly ShipProvider _shipProvider;
         private int _currentRound = 1;
 
         public GameOutcomeHandler(
             IMessageBroker messageBroker,
             InvadersFleetProvider invadersFleetProvider,
-            InvadersFleetFactory invadersFleetFactory)
+            InvadersFleetFactory invadersFleetFactory,
+            ShipProvider shipProvider)
         {
             _messageBroker = messageBroker;
             _invadersFleetProvider = invadersFleetProvider;
             _invadersFleetFactory = invadersFleetFactory;
+            _shipProvider = shipProvider;
         }
 
         void IInitializable.Initialize()

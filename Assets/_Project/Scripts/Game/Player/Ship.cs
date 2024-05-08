@@ -20,6 +20,7 @@ namespace _Project.Scripts.Game.Player
         private float _inputMovementDelta;
         private float _speed;
         private int _health;
+        private IShipWeapon _defaultWeapon;
         private IShipWeapon _weapon;
         
         public Ship(Bounds shipMovementBounds)
@@ -51,13 +52,25 @@ namespace _Project.Scripts.Game.Player
             set => _speed = value;
         }
 
-        public ICollection<IDisposable> Subscriptions => _subscriptions;
-
-        public void SetWeapon(IShipWeapon weapon)
+        public IShipWeapon DefaultWeapon
         {
-            _weapon = weapon;
+            get => _defaultWeapon;
+            set
+            {
+                _defaultWeapon = value;
+                if (_weapon == null)
+                    SwitchWeapon(ref _weapon, value);
+            }
         }
         
+        public IShipWeapon Weapon
+        {
+            get => _weapon;
+            set => SwitchWeapon(ref _weapon, value);
+        }
+
+        public ICollection<IDisposable> Subscriptions => _subscriptions;
+
         public void Dispose()
         {
             _subscriptions.Dispose();
@@ -65,7 +78,7 @@ namespace _Project.Scripts.Game.Player
             _destroyedCommand.Dispose();
             _healthChangedCommand.Dispose();
         }
-        
+
         void IInputListener.OnAttackRequested()
         {
             _inputAttackRequested = true;
@@ -78,22 +91,8 @@ namespace _Project.Scripts.Game.Player
 
         void IUpdatable.OnUpdate(float deltaTime)
         {
-            Move(deltaTime);
-            HandleAttackInput(deltaTime);
-        }
-
-        private void Move(float deltaTime)
-        {
-            var position = _position.Value;
-            position.x += _inputMovementDelta * _speed * deltaTime;
-            position.x = Mathf.Clamp(position.x, _shipMovementBounds.min.x, _shipMovementBounds.max.x);
-            _position.Value = position;
-        }
-
-        private void HandleAttackInput(float deltaTime)
-        {
-            _weapon.Update(deltaTime, _inputAttackRequested);
-            _inputAttackRequested = false;
+            UpdateMovement(deltaTime);
+            UpdateAttack(deltaTime);
         }
 
         public void ApplyDamage()
@@ -106,6 +105,31 @@ namespace _Project.Scripts.Game.Player
             
             if (_health <= 0)
                 _destroyedCommand.Execute(this);
+        }
+        
+        private void UpdateMovement(float deltaTime)
+        {
+            var position = _position.Value;
+            position.x += _inputMovementDelta * _speed * deltaTime;
+            position.x = Mathf.Clamp(position.x, _shipMovementBounds.min.x, _shipMovementBounds.max.x);
+            _position.Value = position;
+        }
+
+        private void UpdateAttack(float deltaTime)
+        {
+            _weapon.Update(deltaTime, _inputAttackRequested);
+            if (_inputAttackRequested && _weapon.IsEmpty())
+                SwitchWeapon(ref _weapon, _defaultWeapon);
+            
+            _inputAttackRequested = false;
+        }
+        
+        private static void SwitchWeapon(ref IShipWeapon oldWeapon, IShipWeapon newWeapon)
+        {
+            if (oldWeapon != null)
+                oldWeapon.OnUnequipped();
+            oldWeapon = newWeapon;
+            oldWeapon.OnEquipped();
         }
     }
 }

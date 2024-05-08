@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd9d1a8e39ef477da01c98642fae243b, type: 3}
+  m_Name: LaserPickup
+  m_EditorClassIdentifier: 
+  _iconSprite: {fileID: 1095549313, guid: 3c48a65ade7e6934ab53df441c0ab416, type: 3}
+  _laserCharges: 60

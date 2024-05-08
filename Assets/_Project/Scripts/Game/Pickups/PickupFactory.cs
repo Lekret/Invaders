@@ -26,9 +26,11 @@ namespace _Project.Scripts.Game.Pickups
             var pickup = new Pickup();
             pickup.Position = position;
             pickup.Velocity = Vector2.down * _pickupsConfig.Speed;
+            var pickupBehaviour = _pickupsConfig.Behaviours[Random.Range(0, _pickupsConfig.Behaviours.Length)];
+            pickup.SetPickupBehaviour(pickupBehaviour);
             
             var pickupView = _instantiator.InstantiatePrefabForComponent<PickupView>(_pickupsConfig.PickupViewPrefab);
-            pickupView.Init(pickup);
+            pickupView.Init(pickup, pickupBehaviour.IconSprite);
             pickup
                 .DestroyedAsObservable()
                 .Subscribe(_ => _gameLoop.Remove(pickup))

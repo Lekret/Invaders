@@ -18,6 +18,7 @@ namespace _Project.Scripts.Game.Projectiles.View
             _bullet = bullet;
             transform.position = bullet.Position;
             _rigidbody2d.velocity = bullet.Velocity;
+            transform.up = bullet.Velocity.normalized;
             
             bullet
                 .PositionAsObservable()

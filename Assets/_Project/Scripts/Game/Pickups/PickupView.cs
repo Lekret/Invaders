@@ -7,15 +7,17 @@ namespace _Project.Scripts.Game.Pickups
     public class PickupView : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rigidbody2d;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         
         private readonly CompositeDisposable _subscriptions = new();
         private Pickup _pickup;
-        
-        public void Init(Pickup pickup)
+
+        public void Init(Pickup pickup, Sprite iconSprite)
         {
             _pickup = pickup;
             transform.position = pickup.Position;
             _rigidbody2d.velocity = pickup.Velocity;
+            _spriteRenderer.sprite = iconSprite;
             
             pickup
                 .PositionAsObservable()
@@ -37,9 +39,9 @@ namespace _Project.Scripts.Game.Pickups
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.TryGetComponent(out ShipView shipView))
+            if (other.gameObject.TryGetComponent(out ShipView _))
             {
-                _pickup.OnHitWithShip(shipView.Ship);
+                _pickup.OnHitWithShip();
             }
         }
 

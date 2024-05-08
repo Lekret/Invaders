@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shipHealth: 5
   _shipSpeed: 3
-  _attackCooldown: 0.5
+  _rifleBulletSpeed: 5
+  _rifleAttackInterval: 0.5
   _shipViewPrefab: {fileID: 1952470897710922668, guid: db5a160ceb6d42446b376da63516b67c, type: 3}
   _bulletViewPrefab: {fileID: 2448256251855152609, guid: 5774fa5cbfbe2f4408f7e16fec50ed25, type: 3}

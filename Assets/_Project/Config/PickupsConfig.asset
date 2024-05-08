@@ -15,3 +15,6 @@ MonoBehaviour:
   _pickupViewPrefab: {fileID: 8124363164226681979, guid: 40f0ff250287be34e97f3c7b12b89932, type: 3}
   _speed: 5
   _pickupSpawnProbability: 0.3
+  _behaviours:
+  - {fileID: 11400000, guid: d86eeea5f58a21f47b6d0102ec0904a9, type: 2}
+  - {fileID: 11400000, guid: 9466583600932c845b15af3a25b302c0, type: 2}

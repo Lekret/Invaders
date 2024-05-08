@@ -40,7 +40,10 @@ namespace _Project.Scripts.Game.Invaders
             var invaderPosition = GetShooterInvaderPosition();
             if (invaderPosition.HasValue)
             {
-                _bulletFactory.CreateBullet(invaderPosition.Value, Vector2.down, Team.Invaders);
+                _bulletFactory.CreateBullet(
+                    invaderPosition.Value, 
+                    Vector2.down * _invadersConfig.BulletSpeed, 
+                    Team.Invaders);
             }
         }
 

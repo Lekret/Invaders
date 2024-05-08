@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.Scripts.Game.Pickups.Behaviour;
 using _Project.Scripts.Game.Player;
 using UniRx;
 using UnityEngine;
@@ -12,7 +13,13 @@ namespace _Project.Scripts.Game.Pickups
         private readonly Vector3ReactiveProperty _position = new();
         private readonly Vector2ReactiveProperty _velocity = new();
         private readonly ReactiveCommand<Pickup> _destroyedCommand = new();
+        private IPickupBehaviour _pickupBehaviour;
 
+        public void SetPickupBehaviour(IPickupBehaviour pickupBehaviour)
+        {
+            _pickupBehaviour = pickupBehaviour;
+        }
+        
         public Vector3 Position
         {
             get => _position.Value;
@@ -54,8 +61,9 @@ namespace _Project.Scripts.Game.Pickups
             _destroyedCommand.Execute(this);
         }
 
-        public void OnHitWithShip(Ship ship)
+        public void OnHitWithShip()
         {
+            _pickupBehaviour.Execute();
             Destroy();
         }
     }

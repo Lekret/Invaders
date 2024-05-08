@@ -34,7 +34,16 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInstance(_gameSceneData).AsSingle();
             Container.BindInstance(_playerConfig).AsSingle();
             Container.BindInstance(_invadersConfig).AsSingle();
-            Container.BindInstance(_pickupsConfig).AsSingle();
+            Container
+                .BindInstance(_pickupsConfig)
+                .AsSingle()
+                .OnInstantiated((InjectContext ctx, PickupsConfig cfg) =>
+                {
+                    foreach (var behaviour in cfg.Behaviours)
+                    {
+                        ctx.Container.Inject(behaviour);
+                    }
+                });
         }
 
         private void BindCore()
