@@ -1,5 +1,5 @@
 ﻿using _Project.Scripts.Game.Invaders.View;
-using _Project.Scripts.Game.Projectiles.View;
+using _Project.Scripts.Game.Projectiles.Bullets.View;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Invaders

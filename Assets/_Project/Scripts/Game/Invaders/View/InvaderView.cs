@@ -37,7 +37,7 @@ namespace _Project.Scripts.Game.Invaders.View
                 .Subscribe(_ => DestroySelf())
                 .AddTo(_subscriptions);
             
-            _subscriptions.AddTo(this);
+            _subscriptions.AddTo(gameObject);
         }
 
         private void PickNextSprite()

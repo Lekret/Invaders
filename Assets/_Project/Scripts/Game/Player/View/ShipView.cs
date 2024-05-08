@@ -34,7 +34,7 @@ namespace _Project.Scripts.Game.Player.View
                 })
                 .AddTo(_subscriptions);
             
-            _subscriptions.AddTo(this);
+            _subscriptions.AddTo(gameObject);
         }
     }
 }

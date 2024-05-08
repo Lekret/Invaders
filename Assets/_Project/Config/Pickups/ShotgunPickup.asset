@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: ShotgunPickup
   m_EditorClassIdentifier: 
   _iconSprite: {fileID: 920949282, guid: 3c48a65ade7e6934ab53df441c0ab416, type: 3}
-  _shotgunAmmo: 6
+  _shotgunAmmo: 3
+  _attackInterval: 0.5
+  _bulletSpeed: 5

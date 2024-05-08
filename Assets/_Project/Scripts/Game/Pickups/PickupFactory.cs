@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.CoreLoop;
+using _Project.Scripts.Game.Pickups.View;
 using UniRx;
 using UnityEngine;
 using Zenject;

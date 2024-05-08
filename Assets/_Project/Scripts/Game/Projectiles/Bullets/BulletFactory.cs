@@ -1,13 +1,12 @@
-﻿using System;
-using _Project.Scripts.Game.CoreLoop;
+﻿using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders;
 using _Project.Scripts.Game.Player;
-using _Project.Scripts.Game.Projectiles.View;
+using _Project.Scripts.Game.Projectiles.Bullets.View;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Game.Projectiles
+namespace _Project.Scripts.Game.Projectiles.Bullets
 {
     public class BulletFactory
     {

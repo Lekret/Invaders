@@ -2,7 +2,7 @@
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Pickups
+namespace _Project.Scripts.Game.Pickups.View
 {
     public class PickupView : MonoBehaviour
     {
@@ -34,7 +34,7 @@ namespace _Project.Scripts.Game.Pickups
                 .Subscribe(_ => DestroySelf())
                 .AddTo(_subscriptions);
             
-            _subscriptions.AddTo(this);
+            _subscriptions.AddTo(gameObject);
         }
 
         private void OnCollisionEnter2D(Collision2D other)

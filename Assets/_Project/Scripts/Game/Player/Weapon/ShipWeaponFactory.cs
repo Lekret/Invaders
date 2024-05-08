@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Game.Player.Weapon.Impl;
-using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Projectiles.Bullets;
+using _Project.Scripts.Game.Projectiles.Lasers;
 
 namespace _Project.Scripts.Game.Player.Weapon
 {
@@ -8,15 +9,18 @@ namespace _Project.Scripts.Game.Player.Weapon
         private readonly ShipProvider _shipProvider;
         private readonly BulletFactory _bulletFactory;
         private readonly PlayerConfig _playerConfig;
+        private readonly LaserFactory _laserFactory;
 
         public ShipWeaponFactory(
             ShipProvider shipProvider,
             BulletFactory bulletFactory, 
-            PlayerConfig playerConfig)
+            PlayerConfig playerConfig,
+            LaserFactory laserFactory)
         {
             _shipProvider = shipProvider;
             _bulletFactory = bulletFactory;
             _playerConfig = playerConfig;
+            _laserFactory = laserFactory;
         }
 
         public RifleShipWeapon CreateRifle()
@@ -39,10 +43,10 @@ namespace _Project.Scripts.Game.Player.Weapon
             return weapon;
         }
 
-        public LaserShipWeapon CreateLaser(float charges)
+        public LaserShipWeapon CreateLaser(float charge)
         {
-            var weapon = new LaserShipWeapon();
-            weapon.Charges = charges;
+            var weapon = new LaserShipWeapon(_laserFactory, _shipProvider);
+            weapon.Charge = charge;
             return weapon;
         }
     }

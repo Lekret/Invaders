@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.Pickups.Behaviour;
+using _Project.Scripts.Game.Pickups.View;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Pickups

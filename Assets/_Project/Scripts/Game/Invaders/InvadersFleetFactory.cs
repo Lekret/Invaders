@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Game.CoreLoop;
 using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Projectiles.Bullets;
 using UniRx;
 using UnityEngine;
 using Zenject;

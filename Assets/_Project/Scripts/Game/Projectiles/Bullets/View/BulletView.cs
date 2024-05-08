@@ -1,10 +1,9 @@
-﻿using System;
-using _Project.Scripts.Game.Invaders.View;
+﻿using _Project.Scripts.Game.Invaders.View;
 using _Project.Scripts.Game.Player.View;
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Projectiles.View
+namespace _Project.Scripts.Game.Projectiles.Bullets.View
 {
     public class BulletView : MonoBehaviour
     {
@@ -35,7 +34,7 @@ namespace _Project.Scripts.Game.Projectiles.View
                 .Subscribe(_ => DestroySelf())
                 .AddTo(bullet.Subscriptions);
             
-            _subscriptions.AddTo(this);
+            _subscriptions.AddTo(gameObject);
         }
 
         private void OnCollisionEnter2D(Collision2D other)

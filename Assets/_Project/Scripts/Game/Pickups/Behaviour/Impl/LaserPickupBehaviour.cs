@@ -11,11 +11,11 @@ namespace _Project.Scripts.Game.Pickups.Behaviour.Impl
         [Inject] private ShipProvider _shipProvider;
         [Inject] private ShipWeaponFactory _shipWeaponFactory;
 
-        [SerializeField] private float _laserCharges = 60f;
+        [SerializeField] private float _laserCharge = 60f;
         
         public override void Execute()
         {
-            _shipProvider.Ship.Weapon = _shipWeaponFactory.CreateLaser(_laserCharges);
+            _shipProvider.Ship.Weapon = _shipWeaponFactory.CreateLaser(_laserCharge);
         }
     }
 }

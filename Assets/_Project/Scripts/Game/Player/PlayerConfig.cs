@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Game.Player.View;
-using _Project.Scripts.Game.Projectiles.View;
+using _Project.Scripts.Game.Projectiles.Bullets.View;
+using _Project.Scripts.Game.Projectiles.Lasers.View;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Player
@@ -13,6 +14,7 @@ namespace _Project.Scripts.Game.Player
         [SerializeField] private float _rifleAttackInterval = 0.5f;
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private BulletView _bulletViewPrefab;
+        [SerializeField] private LaserView _laserViewPrefab;
 
         public int ShipHealth => _shipHealth;
         public float ShipSpeed => _shipSpeed;
@@ -20,5 +22,6 @@ namespace _Project.Scripts.Game.Player
         public float RifleAttackInterval => _rifleAttackInterval;
         public ShipView ShipViewPrefab => _shipViewPrefab;
         public BulletView BulletViewPrefab => _bulletViewPrefab;
+        public LaserView LaserViewPrefab => _laserViewPrefab;
     }
 }

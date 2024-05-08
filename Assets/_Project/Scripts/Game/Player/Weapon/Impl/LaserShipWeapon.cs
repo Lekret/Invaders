@@ -1,32 +1,56 @@
-﻿namespace _Project.Scripts.Game.Player.Weapon.Impl
+﻿using _Project.Scripts.Game.Projectiles.Lasers;
+
+namespace _Project.Scripts.Game.Player.Weapon.Impl
 {
     public class LaserShipWeapon : IShipWeapon
     {
-        private float _charges;
+        private readonly LaserFactory _laserFactory;
+        private readonly ShipProvider _shipProvider;
+        private Laser _laser;
+        private float _charge;
 
-        public float Charges
+        public LaserShipWeapon(
+            LaserFactory laserFactory, 
+            ShipProvider shipProvider)
         {
-            get => _charges;
-            set => _charges = value;
+            _laserFactory = laserFactory;
+            _shipProvider = shipProvider;
+        }
+
+        public float Charge
+        {
+            get => _charge;
+            set => _charge = value;
         }
 
         public bool IsEmpty()
         {
-            return _charges <= 0f;
+            return _charge <= 0f;
         }
 
         void IShipWeapon.OnEquipped()
         {
-            _charges = 120f;
+            _laser = _laserFactory.CreateLaser();
         }
 
         void IShipWeapon.OnUnequipped()
         {
+            if (_laser != null)
+                _laser.Destroy();
         }
 
         void IShipWeapon.Update(float deltaTime, bool isAttackRequested)
         {
-            _charges -= deltaTime;
+            if (isAttackRequested)
+            {
+                _laser.IsActive = true;
+                _laser.Position = _shipProvider.Ship.Position;
+                _charge -= deltaTime;
+            }
+            else
+            {
+                _laser.IsActive = false;
+            }
         }
     }
 }

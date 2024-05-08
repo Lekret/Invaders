@@ -5,6 +5,8 @@ using _Project.Scripts.Game.Pickups;
 using _Project.Scripts.Game.Player;
 using _Project.Scripts.Game.Player.Weapon;
 using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Projectiles.Bullets;
+using _Project.Scripts.Game.Projectiles.Lasers;
 using _Project.Scripts.Game.Services;
 using UnityEngine;
 using Zenject;
@@ -26,6 +28,7 @@ namespace _Project.Scripts.Infrastructure
             BindShip();
             BindInvaders();
             BindBullets();
+            BindLaser();
             BindPickups();
         }
 
@@ -83,7 +86,12 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<BulletFactory>().AsSingle();
         }
-        
+
+        private void BindLaser()
+        {
+            Container.Bind<LaserFactory>().AsSingle();
+        }
+
         private void BindPickups()
         {
             Container.Bind<PickupFactory>().AsSingle();

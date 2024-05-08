@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Game.Projectiles;
+using _Project.Scripts.Game.Projectiles.Bullets;
 using UnityEngine;
 
 namespace _Project.Scripts.Game.Invaders

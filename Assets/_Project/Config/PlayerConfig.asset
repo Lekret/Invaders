@@ -18,3 +18,4 @@ MonoBehaviour:
   _rifleAttackInterval: 0.5
   _shipViewPrefab: {fileID: 1952470897710922668, guid: db5a160ceb6d42446b376da63516b67c, type: 3}
   _bulletViewPrefab: {fileID: 2448256251855152609, guid: 5774fa5cbfbe2f4408f7e16fec50ed25, type: 3}
+  _laserViewPrefab: {fileID: 7733603056830499796, guid: f0755c581d05ef64d9184271289ba49c, type: 3}

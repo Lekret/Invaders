@@ -5,7 +5,7 @@ using _Project.Scripts.Game.Player;
 using UniRx;
 using UnityEngine;
 
-namespace _Project.Scripts.Game.Projectiles
+namespace _Project.Scripts.Game.Projectiles.Bullets
 {
     public class Bullet : IDisposable
     {

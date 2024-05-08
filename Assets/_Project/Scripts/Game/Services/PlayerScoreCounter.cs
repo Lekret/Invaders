@@ -5,7 +5,7 @@ namespace _Project.Scripts.Game.Services
 {
     public class PlayerScoreCounter : IDisposable
     {
-        private readonly ReactiveProperty<int> _score = new();
+        private readonly IntReactiveProperty _score = new();
 
         public int Score => _score.Value;
         public IObservable<int> ScoreAsObservable() => _score;
