@@ -6,7 +6,7 @@ using Zenject;
 
 namespace _Project.Scripts.Game.CoreLoop
 {
-    public class GameLoop : IDisposable, ITickable, ILateTickable, IFixedTickable
+    public class GameLoop : IInitializable, IDisposable, ITickable, ILateTickable, IFixedTickable
     {
         private readonly List<IDisposable> _disposables = new();
         private readonly List<IDisposable> _toDisposeEndFrame = new();
@@ -105,6 +105,9 @@ namespace _Project.Scripts.Game.CoreLoop
                     items[k].OnFixedUpdate(deltaTime);
                 }
             }
+            
+            Physics.Simulate(deltaTime);
+            Physics2D.Simulate(deltaTime);
         }
 
         void ILateTickable.LateTick()
@@ -112,6 +115,12 @@ namespace _Project.Scripts.Game.CoreLoop
             DisposeMany(_toDisposeEndFrame);
         }
 
+        void IInitializable.Initialize()
+        {
+            Physics.simulationMode = SimulationMode.Script;
+            Physics2D.simulationMode = SimulationMode2D.Script;
+        }
+        
         void IDisposable.Dispose()
         {
             DisposeMany(_disposables);
